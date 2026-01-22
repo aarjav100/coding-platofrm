@@ -1,576 +1,250 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserRole } from '@/hooks/useUserRole';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Shield, Users, BookOpen, Trophy, Settings, 
-  ArrowLeft, Loader2, UserPlus, Trash2, AlertTriangle,
-  LayoutDashboard, Database, Activity, CreditCard, Check, IndianRupee
-} from 'lucide-react';
-import { modules, Module } from '@/data/modules';
-import { toast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-interface UserWithRole {
-  id: string;
-  user_id: string;
-  role: 'admin' | 'moderator' | 'user';
-  created_at: string;
-  email?: string;
-}
-
-interface Stats {
-  totalUsers: number;
-  totalLessons: number;
-  totalContests: number;
-  totalProblems: number;
-}
+  Shield, ArrowLeft, Loader2, Trash2, Plus, Calendar, Trophy
+} from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
+import api from '@/lib/api';
 
 const Admin = () => {
   const navigate = useNavigate();
   const { user, isAdmin, loading: authLoading } = useUserRole();
-  const [users, setUsers] = useState<UserWithRole[]>([]);
-  const [stats, setStats] = useState<Stats>({ totalUsers: 0, totalLessons: 0, totalContests: 0, totalProblems: 0 });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [modulesList, setModulesList] = useState<Module[]>(modules);
+
+  // Data States
+  const [stats, setStats] = useState({ totalUsers: 0, totalProblems: 0, activeUsers: 0, totalSubmissions: 0 });
+  const [problems, setProblems] = useState<any[]>([]);
+  const [contests, setContests] = useState<any[]>([]);
+
+  // Forms
+  const [newProblem, setNewProblem] = useState({
+    title: '', description: '', difficulty: 'Easy',
+    constraints: '', inputFormat: '', outputFormat: '',
+    testCases: [{ input: '', output: '', isPublic: true }]
+  });
+
+  const [newContest, setNewContest] = useState({
+    title: '', description: '', startTime: '', endTime: '', problems: [] as string[]
+  });
 
   useEffect(() => {
     if (!authLoading) {
       if (!user) {
         navigate('/auth');
-        return;
-      }
-      if (!isAdmin) {
-        toast({
-          title: "Access Denied",
-          description: "You don't have permission to access the admin panel.",
-          variant: "destructive"
-        });
+      } else if (!isAdmin) {
+        toast({ title: "Access Denied", description: "Admin only.", variant: "destructive" });
         navigate('/');
-        return;
+      } else {
+        fetchData();
       }
-      fetchData();
     }
   }, [user, isAdmin, authLoading, navigate]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch users with roles
-      const { data: rolesData, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (rolesError) throw rolesError;
-      setUsers(rolesData || []);
-
-      // Fetch stats
-      const [lessonsRes, contestsRes, problemsRes, profilesRes] = await Promise.all([
-        supabase.from('lessons').select('id', { count: 'exact', head: true }),
-        supabase.from('contests').select('id', { count: 'exact', head: true }),
-        supabase.from('contest_problems').select('id', { count: 'exact', head: true }),
-        supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      const [statsRes, problemsRes, contestsRes] = await Promise.all([
+        api.get('/admin/stats'),
+        api.get('/problems'),
+        api.get('/contests')
       ]);
 
-      setStats({
-        totalUsers: profilesRes.count || 0,
-        totalLessons: lessonsRes.count || 0,
-        totalContests: contestsRes.count || 0,
-        totalProblems: problemsRes.count || 0,
-      });
+      setStats(statsRes.data);
+      setProblems(problemsRes.data);
+      setContests(contestsRes.data);
     } catch (error) {
-      console.error('Error fetching data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch admin data.",
-        variant: "destructive"
-      });
+      console.error('Error fetching admin data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const updateUserRole = async (userId: string, newRole: 'admin' | 'moderator' | 'user') => {
+  // --- Problem Handlers ---
+  const handleCreateProblem = async () => {
     try {
-      const { error } = await supabase
-        .from('user_roles')
-        .update({ role: newRole })
-        .eq('user_id', userId);
-
-      if (error) throw error;
-
-      setUsers(users.map(u => 
-        u.user_id === userId ? { ...u, role: newRole } : u
-      ));
-
-      toast({
-        title: "Role Updated",
-        description: `User role has been updated to ${newRole}.`
+      await api.post('/problems', newProblem);
+      toast({ title: "Success", description: "Problem created" });
+      fetchData();
+      setNewProblem({
+        title: '', description: '', difficulty: 'Easy',
+        constraints: '', inputFormat: '', outputFormat: '',
+        testCases: [{ input: '', output: '', isPublic: true }]
       });
-    } catch (error) {
-      console.error('Error updating role:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update user role.",
-        variant: "destructive"
-      });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.response?.data?.message, variant: "destructive" });
     }
   };
 
-  const removeUserRole = async (userId: string) => {
+  const handleDeleteProblem = async (id: string) => {
+    if (!confirm('Delete problem?')) return;
     try {
-      const { error } = await supabase
-        .from('user_roles')
-        .delete()
-        .eq('user_id', userId);
-
-      if (error) throw error;
-
-      setUsers(users.filter(u => u.user_id !== userId));
-
-      toast({
-        title: "Role Removed",
-        description: "User role has been removed."
-      });
+      await api.delete(`/problems/${id}`);
+      toast({ title: "Success", description: "Problem deleted" });
+      fetchData();
     } catch (error) {
-      console.error('Error removing role:', error);
-      toast({
-        title: "Error",
-        description: "Failed to remove user role.",
-        variant: "destructive"
-      });
+      toast({ title: "Error", variant: "destructive" });
+    }
+  };
+
+  // --- Contest Handlers ---
+  const handleCreateContest = async () => {
+    try {
+      // Basic validation
+      if (!newContest.title || !newContest.startTime || !newContest.endTime) {
+        toast({ title: "Error", description: "Fill required fields", variant: "destructive" });
+        return;
+      }
+
+      await api.post('/contests', newContest);
+      toast({ title: "Success", description: "Contest created" });
+      fetchData();
+      setNewContest({ title: '', description: '', startTime: '', endTime: '', problems: [] });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.response?.data?.message, variant: "destructive" });
     }
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Loading admin panel...</p>
-        </div>
-      </div>
-    );
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
   }
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
-              <AlertTriangle className="h-6 w-6 text-destructive" />
-            </div>
-            <CardTitle>Access Denied</CardTitle>
-            <CardDescription>
-              You don't have permission to access the admin panel.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => navigate('/')} className="w-full">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Go Back Home
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case 'admin': return 'default';
-      case 'moderator': return 'secondary';
-      default: return 'outline';
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
+    <div className="min-h-screen bg-background pb-10">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/')}><ArrowLeft className="h-5 w-5" /></Button>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                 <Shield className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
                 <h1 className="text-xl font-bold">Admin Panel</h1>
-                <p className="text-xs text-muted-foreground">Manage your platform</p>
+                <p className="text-xs text-muted-foreground">Manage platform</p>
               </div>
             </div>
           </div>
-          <Badge variant="secondary" className="gap-1.5">
-            <Shield className="h-3 w-3" />
-            Administrator
-          </Badge>
+          <Badge variant="secondary"><Shield className="h-3 w-3 mr-1" /> Administrator</Badge>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full max-w-lg grid-cols-4 bg-muted/50">
-            <TabsTrigger value="dashboard" className="gap-2">
-              <LayoutDashboard className="h-4 w-4" />
-              Dashboard
-            </TabsTrigger>
-            <TabsTrigger value="users" className="gap-2">
-              <Users className="h-4 w-4" />
-              Users
-            </TabsTrigger>
-            <TabsTrigger value="subscriptions" className="gap-2">
-              <CreditCard className="h-4 w-4" />
-              Subscriptions
-            </TabsTrigger>
-            <TabsTrigger value="content" className="gap-2">
-              <Database className="h-4 w-4" />
-              Content
-            </TabsTrigger>
+          <TabsList>
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="problems">Problems</TabsTrigger>
+            <TabsTrigger value="contests">Contests</TabsTrigger>
           </TabsList>
 
-          {/* Dashboard Tab */}
+          {/* DASHBOARD */}
           <TabsContent value="dashboard" className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                  <Users className="h-4 w-4 text-primary" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalUsers}</div>
-                  <p className="text-xs text-muted-foreground">Registered accounts</p>
-                </CardContent>
+            <div className="grid gap-4 md:grid-cols-4">
+              <Card>
+                <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total Users</CardTitle></CardHeader>
+                <CardContent><div className="text-2xl font-bold">{stats.totalUsers}</div></CardContent>
               </Card>
-              
-              <Card className="border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Lessons</CardTitle>
-                  <BookOpen className="h-4 w-4 text-secondary" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalLessons}</div>
-                  <p className="text-xs text-muted-foreground">Available lessons</p>
-                </CardContent>
+              <Card>
+                <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Active Users (7d)</CardTitle></CardHeader>
+                <CardContent><div className="text-2xl font-bold">{stats.activeUsers}</div></CardContent>
               </Card>
-              
-              <Card className="border-green-500/20 bg-gradient-to-br from-green-500/5 to-transparent">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Contests</CardTitle>
-                  <Trophy className="h-4 w-4 text-green-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalContests}</div>
-                  <p className="text-xs text-muted-foreground">Active contests</p>
-                </CardContent>
+              <Card>
+                <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total Problems</CardTitle></CardHeader>
+                <CardContent><div className="text-2xl font-bold">{stats.totalProblems}</div></CardContent>
               </Card>
-              
-              <Card className="border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-transparent">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Problems</CardTitle>
-                  <Activity className="h-4 w-4 text-orange-500" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalProblems}</div>
-                  <p className="text-xs text-muted-foreground">Contest problems</p>
-                </CardContent>
+              <Card>
+                <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total Submissions</CardTitle></CardHeader>
+                <CardContent><div className="text-2xl font-bold">{stats.totalSubmissions}</div></CardContent>
               </Card>
             </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Quick Actions
-                </CardTitle>
-                <CardDescription>Common administrative tasks</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-                <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => setActiveTab('users')}>
-                  <UserPlus className="h-5 w-5" />
-                  Manage Users
-                </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/contests')}>
-                  <Trophy className="h-5 w-5" />
-                  View Contests
-                </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/')}>
-                  <BookOpen className="h-5 w-5" />
-                  View Lessons
-                </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2">
-                  <Settings className="h-5 w-5" />
-                  Settings
-                </Button>
-              </CardContent>
-            </Card>
           </TabsContent>
 
-          {/* Users Tab */}
-          <TabsContent value="users" className="space-y-6">
+          {/* PROBLEMS */}
+          <TabsContent value="problems" className="space-y-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  User Roles Management
-                </CardTitle>
-                <CardDescription>
-                  Manage user roles and permissions. Only users with assigned roles appear here.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {users.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No users with roles found.</p>
-                    <p className="text-sm mt-2">Assign roles to users using the database directly.</p>
-                  </div>
-                ) : (
-                  <ScrollArea className="h-[400px]">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>User ID</TableHead>
-                          <TableHead>Role</TableHead>
-                          <TableHead>Assigned</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {users.map((userRole) => (
-                          <TableRow key={userRole.id}>
-                            <TableCell className="font-mono text-xs">
-                              {userRole.user_id.slice(0, 8)}...
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={getRoleBadgeVariant(userRole.role)}>
-                                {userRole.role}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-muted-foreground text-sm">
-                              {new Date(userRole.created_at).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex items-center justify-end gap-2">
-                                <Select
-                                  value={userRole.role}
-                                  onValueChange={(value) => updateUserRole(userRole.user_id, value as 'admin' | 'moderator' | 'user')}
-                                >
-                                  <SelectTrigger className="w-32">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="admin">Admin</SelectItem>
-                                    <SelectItem value="moderator">Moderator</SelectItem>
-                                    <SelectItem value="user">User</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                
-                                <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="icon"
-                                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                      disabled={userRole.user_id === user?.id}
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>Remove Role</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                        Are you sure you want to remove this user's role? They will lose all special permissions.
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction
-                                        onClick={() => removeUserRole(userRole.user_id)}
-                                        className="bg-destructive hover:bg-destructive/90"
-                                      >
-                                        Remove
-                                      </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </ScrollArea>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Subscriptions Tab */}
-          <TabsContent value="subscriptions" className="space-y-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="h-5 w-5" />
-                    Module Subscriptions
-                  </CardTitle>
-                  <CardDescription>
-                    Manage pricing for all modules. Set modules as free or paid.
-                  </CardDescription>
+              <CardHeader><CardTitle>Create Problem</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <Input placeholder="Title" value={newProblem.title} onChange={e => setNewProblem({ ...newProblem, title: e.target.value })} />
+                <Textarea placeholder="Description" value={newProblem.description} onChange={e => setNewProblem({ ...newProblem, description: e.target.value })} />
+                <div className="flex gap-2">
+                  <Input placeholder="Difficulty" value={newProblem.difficulty} onChange={e => setNewProblem({ ...newProblem, difficulty: e.target.value })} />
+                  <Button onClick={handleCreateProblem}><Plus className="mr-2 h-4 w-4" /> Create</Button>
                 </div>
-                <Button 
-                  onClick={() => {
-                    setModulesList(modulesList.map(m => ({ ...m, price: 0 })));
-                    toast({
-                      title: "All Modules Free",
-                      description: "All modules have been set to free access."
-                    });
-                  }}
-                  className="gap-2"
-                >
-                  <Check className="h-4 w-4" />
-                  Make All Free
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[500px]">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Module</TableHead>
-                        <TableHead>Category</TableHead>
-                        <TableHead>Difficulty</TableHead>
-                        <TableHead>Price</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow><TableHead>Title</TableHead><TableHead>Difficulty</TableHead><TableHead>Actions</TableHead></TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {problems.map(p => (
+                      <TableRow key={p._id}>
+                        <TableCell>{p.title}</TableCell>
+                        <TableCell><Badge variant="outline">{p.difficulty}</Badge></TableCell>
+                        <TableCell>
+                          <Button variant="ghost" size="sm" onClick={() => handleDeleteProblem(p._id)} className="text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {modulesList.map((module) => (
-                        <TableRow key={module.id}>
-                          <TableCell>
-                            <div className="font-medium">{module.title}</div>
-                            <div className="text-xs text-muted-foreground">{module.topics} topics</div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">{module.category}</Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge 
-                              variant={
-                                module.difficulty === 'beginner' ? 'secondary' : 
-                                module.difficulty === 'intermediate' ? 'default' : 
-                                'destructive'
-                              }
-                            >
-                              {module.difficulty}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {module.price === 0 ? (
-                              <Badge variant="secondary" className="gap-1 bg-green-500/10 text-green-600 border-green-500/20">
-                                <Check className="h-3 w-3" />
-                                Free
-                              </Badge>
-                            ) : (
-                              <Badge variant="outline" className="gap-1">
-                                <IndianRupee className="h-3 w-3" />
-                                {module.price}
-                              </Badge>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              variant={module.price === 0 ? "ghost" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setModulesList(modulesList.map(m => 
-                                  m.id === module.id ? { ...m, price: 0 } : m
-                                ));
-                                toast({
-                                  title: "Module Updated",
-                                  description: `${module.title} is now free.`
-                                });
-                              }}
-                              disabled={module.price === 0}
-                            >
-                              {module.price === 0 ? 'Already Free' : 'Make Free'}
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </ScrollArea>
+                    ))}
+                  </TableBody>
+                </Table>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Content Tab */}
-          <TabsContent value="content" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5" />
-                    Lessons
-                  </CardTitle>
-                  <CardDescription>Manage learning content</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold mb-2">{stats.totalLessons}</div>
-                  <p className="text-sm text-muted-foreground mb-4">Total lessons available</p>
-                  <Button variant="outline" className="w-full" onClick={() => navigate('/')}>
-                    View All Lessons
-                  </Button>
-                </CardContent>
-              </Card>
+          {/* CONTESTS */}
+          <TabsContent value="contests" className="space-y-6">
+            <Card>
+              <CardHeader><CardTitle>Create Contest</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <Input placeholder="Contest Title" value={newContest.title} onChange={e => setNewContest({ ...newContest, title: e.target.value })} />
+                <Textarea placeholder="Description" value={newContest.description} onChange={e => setNewContest({ ...newContest, description: e.target.value })} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium">Start Time</span>
+                    <Input type="datetime-local" value={newContest.startTime} onChange={e => setNewContest({ ...newContest, startTime: e.target.value })} />
+                  </div>
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium">End Time</span>
+                    <Input type="datetime-local" value={newContest.endTime} onChange={e => setNewContest({ ...newContest, endTime: e.target.value })} />
+                  </div>
+                </div>
+                <Button onClick={handleCreateContest} className="w-full"><Trophy className="mr-2 h-4 w-4" /> Create Contest</Button>
+              </CardContent>
+            </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Trophy className="h-5 w-5" />
-                    Contests
-                  </CardTitle>
-                  <CardDescription>Manage coding contests</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold mb-2">{stats.totalContests}</div>
-                  <p className="text-sm text-muted-foreground mb-4">Total contests created</p>
-                  <Button variant="outline" className="w-full" onClick={() => navigate('/contests')}>
-                    View All Contests
-                  </Button>
-                </CardContent>
-              </Card>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {contests.map(c => (
+                <Card key={c._id}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between text-base">
+                      {c.title}
+                      <Badge>{new Date(c.startTime) > new Date() ? 'Upcoming' : new Date(c.endTime) > new Date() ? 'Active' : 'Ended'}</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm text-muted-foreground space-y-2">
+                    <div className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {new Date(c.startTime).toLocaleDateString()}</div>
+                    <div>Participants: {c.participants?.length || 0}</div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </TabsContent>
+
         </Tabs>
       </main>
     </div>
   );
 };
-
 export default Admin;

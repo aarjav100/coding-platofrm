@@ -145,15 +145,15 @@ const Contests = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50 h-16 flex items-center px-6 justify-between shadow-sm">
+      <header className="bg-[#0f5132] border-b border-[#0b3d26] sticky top-0 z-50 h-16 flex items-center px-6 justify-between shadow-sm">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-slate-800">Weekly Coding Challenge #1</h1>
+          <h1 className="text-xl font-bold text-white">Weekly Coding Challenge #1</h1>
         </div>
         <div className="flex items-center gap-4">
           <Link to="/">
-            <Button variant="ghost" size="sm" className="text-slate-500">Back to Dashboard</Button>
+            <Button variant="ghost" size="sm" className="text-emerald-50 hover:text-white hover:bg-emerald-800/50">Back to Dashboard</Button>
           </Link>
-          <div className="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
+          <div className="h-8 w-8 rounded-full bg-emerald-800 border border-emerald-600 text-white flex items-center justify-center font-bold text-sm">
             JD
           </div>
         </div>

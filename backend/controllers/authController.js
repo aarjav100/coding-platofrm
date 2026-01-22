@@ -12,7 +12,7 @@ const generateToken = (id) => {
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, role } = req.body;
 
         const userExists = await User.findOne({ email });
         if (userExists) {
@@ -22,7 +22,8 @@ const registerUser = async (req, res) => {
         const user = await User.create({
             username,
             email,
-            password
+            password,
+            role: role || 'user'
         });
 
         if (user) {
@@ -30,6 +31,7 @@ const registerUser = async (req, res) => {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
+                role: user.role,
                 points: user.points,
                 inventory: user.inventory,
                 token: generateToken(user._id)
@@ -52,10 +54,16 @@ const authUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await user.matchPassword(password))) {
+            // Update login history
+            user.lastLogin = new Date();
+            user.loginHistory.push(new Date());
+            await user.save();
+
             res.json({
                 _id: user._id,
                 username: user.username,
                 email: user.email,
+                role: user.role,
                 points: user.points,
                 inventory: user.inventory,
                 token: generateToken(user._id)

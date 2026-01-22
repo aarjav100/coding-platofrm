@@ -1,69 +1,33 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { User } from '@supabase/supabase-js';
 
-type AppRole = 'admin' | 'moderator' | 'user' | null;
+type AppRole = 'admin' | 'user' | null;
 
 export const useUserRole = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any | null>(null);
   const [role, setRole] = useState<AppRole>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-        
-        // Fetch role after auth state change
-        if (session?.user) {
-          setTimeout(() => {
-            fetchUserRole(session.user.id);
-          }, 0);
-        } else {
-          setRole(null);
-          setLoading(false);
-        }
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserRole(session.user.id);
+    const checkAuth = () => {
+      const userInfoString = localStorage.getItem('userInfo');
+      if (userInfoString) {
+        const userInfo = JSON.parse(userInfoString);
+        setUser(userInfo);
+        setRole(userInfo.role || 'user');
       } else {
-        setLoading(false);
+        setUser(null);
+        setRole(null);
       }
-    });
+      setLoading(false);
+    };
 
-    return () => subscription.unsubscribe();
+    checkAuth();
+    window.addEventListener('storage', checkAuth); // Listen for storage changes
+    return () => window.removeEventListener('storage', checkAuth);
   }, []);
 
-  const fetchUserRole = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching role:', error);
-        setRole(null);
-      } else {
-        setRole(data?.role as AppRole || null);
-      }
-    } catch (err) {
-      console.error('Error fetching role:', err);
-      setRole(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const isAdmin = role === 'admin';
-  const isModerator = role === 'moderator' || role === 'admin';
+  const isModerator = role === 'admin'; // For compatibility
 
   return { user, role, loading, isAdmin, isModerator };
 };

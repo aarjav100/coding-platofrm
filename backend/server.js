@@ -22,6 +22,11 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 app.use('/api/store', require('./routes/storeRoutes'));
+app.use('/api/problems', require('./routes/problemRoutes'));
+app.use('/api/leaderboard', require('./routes/leaderboardRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/submissions', require('./routes/submissionRoutes'));
+app.use('/api/contests', require('./routes/contestRoutes'));
 
 // Static folder for uploads
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

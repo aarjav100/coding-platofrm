@@ -1,28 +1,41 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from 'react';
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Medal, Crown, TrendingUp, Search, User, Sparkles } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Trophy, Medal, Crown, Search, Sparkles, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
+import api from '@/lib/api';
 
-const MOCK_LEADERBOARD = [
-    { rank: 1, name: "AlgoMaster_99", xp: 15420, level: 42, language: "C++", avatar: "https://github.com/shadcn.png" },
-    { rank: 2, name: "PythonistaDev", xp: 14200, level: 40, language: "Python", avatar: "https://github.com/shadcn.png" },
-    { rank: 3, name: "JS_Ninja", xp: 13800, level: 38, language: "JavaScript", avatar: "https://github.com/shadcn.png" },
-    { rank: 4, name: "Rust_Evangelist", xp: 12500, level: 35, language: "Rust", avatar: "" },
-    { rank: 5, name: "Go_Gopher", xp: 11900, level: 33, language: "Go", avatar: "" },
-    { rank: 6, name: "Java_Junkie", xp: 10500, level: 30, language: "Java", avatar: "" },
-    { rank: 7, name: "Cpp_Wizard", xp: 9800, level: 28, language: "C++", avatar: "" },
-    { rank: 8, name: "Ruby_Gem", xp: 9200, level: 26, language: "Ruby", avatar: "" },
-    { rank: 9, name: "Swift_Speed", xp: 8700, level: 25, language: "Swift", avatar: "" },
-    { rank: 10, name: "Kotlin_King", xp: 8100, level: 23, language: "Kotlin", avatar: "" },
-];
+interface LeaderboardUser {
+    _id: string;
+    username: string;
+    points: number;
+    solvedCount: number;
+    lastLogin: string;
+}
 
 const Leaderboard = () => {
     const [period, setPeriod] = useState("all-time");
+    const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        const fetchLeaderboard = async () => {
+            try {
+                const { data } = await api.get('/leaderboard');
+                setLeaderboardData(data);
+            } catch (error) {
+                console.error("Failed to fetch leaderboard", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchLeaderboard();
+    }, []);
 
     const getRankIcon = (rank: number) => {
         switch (rank) {
@@ -32,6 +45,10 @@ const Leaderboard = () => {
             default: return <span className="text-lg font-bold text-slate-500 w-6 text-center">{rank}</span>;
         }
     };
+
+    const filteredData = leaderboardData.filter(user =>
+        user.username.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="min-h-screen bg-[#f8fafc] font-sans pb-12">
@@ -67,94 +84,107 @@ const Leaderboard = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
                     <Tabs defaultValue="all-time" className="w-full sm:w-auto" onValueChange={setPeriod}>
                         <TabsList className="bg-white border border-slate-200">
-                            <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                            <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                            <TabsTrigger value="weekly" disabled>Weekly</TabsTrigger>
+                            <TabsTrigger value="monthly" disabled>Monthly</TabsTrigger>
                             <TabsTrigger value="all-time">All Time</TabsTrigger>
                         </TabsList>
                     </Tabs>
 
                     <div className="relative w-full sm:w-64">
                         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <Input placeholder="Search user..." className="pl-9 bg-white border-slate-200" />
+                        <Input
+                            placeholder="Search user..."
+                            className="pl-9 bg-white border-slate-200"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     </div>
                 </div>
 
                 {/* Leaderboard Table */}
                 <Card className="border-slate-200 shadow-sm bg-white/80 backdrop-blur-sm overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    <th className="px-6 py-4 w-20 text-center">Rank</th>
-                                    <th className="px-6 py-4">User</th>
-                                    <th className="px-6 py-4 text-center">Level</th>
-                                    <th className="px-6 py-4">Language</th>
-                                    <th className="px-6 py-4 text-right">Total XP</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {MOCK_LEADERBOARD.map((user, index) => (
-                                    <tr
-                                        key={index}
-                                        className={`group hover:bg-blue-50/50 transition-colors ${index < 3 ? 'bg-gradient-to-r from-transparent via-transparent' : ''} ${index === 0 ? 'to-yellow-50/30' :
+                    {loading ? (
+                        <div className="flex justify-center items-center py-12">
+                            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        <th className="px-6 py-4 w-20 text-center">Rank</th>
+                                        <th className="px-6 py-4">User</th>
+                                        <th className="px-6 py-4 text-center">Problems Solved</th>
+                                        <th className="px-6 py-4">Last Active</th>
+                                        <th className="px-6 py-4 text-right">Total XP</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {filteredData.map((user, index) => (
+                                        <tr
+                                            key={user._id}
+                                            className={`group hover:bg-blue-50/50 transition-colors ${index < 3 ? 'bg-gradient-to-r from-transparent via-transparent' : ''} ${index === 0 ? 'to-yellow-50/30' :
                                                 index === 1 ? 'to-slate-50/30' :
                                                     index === 2 ? 'to-orange-50/30' : ''
-                                            }`}
-                                    >
-                                        <td className="px-6 py-4 text-center">
-                                            <div className="flex items-center justify-center">
-                                                {getRankIcon(user.rank)}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <Avatar className={`h-10 w-10 border-2 ${index === 0 ? 'border-yellow-400' :
+                                                }`}
+                                        >
+                                            <td className="px-6 py-4 text-center">
+                                                <div className="flex items-center justify-center">
+                                                    {getRankIcon(index + 1)}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <Avatar className={`h-10 w-10 border-2 ${index === 0 ? 'border-yellow-400' :
                                                         index === 1 ? 'border-slate-300' :
                                                             index === 2 ? 'border-orange-300' : 'border-slate-100'
-                                                    }`}>
-                                                    <AvatarImage src={user.avatar} />
-                                                    <AvatarFallback className="bg-slate-200 text-slate-600 font-bold">
-                                                        {user.name.slice(0, 2).toUpperCase()}
-                                                    </AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <div className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
-                                                        {user.name}
+                                                        }`}>
+                                                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`} />
+                                                        <AvatarFallback className="bg-slate-200 text-slate-600 font-bold">
+                                                            {user.username.slice(0, 2).toUpperCase()}
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    <div>
+                                                        <div className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+                                                            {user.username}
+                                                        </div>
+                                                        {index === 0 && (
+                                                            <Badge variant="secondary" className="text-[10px] bg-yellow-100 text-yellow-700 h-5 px-1.5 gap-1">
+                                                                <Sparkles className="w-3 h-3" /> Champion
+                                                            </Badge>
+                                                        )}
                                                     </div>
-                                                    {index === 0 && (
-                                                        <Badge variant="secondary" className="text-[10px] bg-yellow-100 text-yellow-700 h-5 px-1.5 gap-1">
-                                                            <Sparkles className="w-3 h-3" /> Champion
-                                                        </Badge>
-                                                    )}
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <Badge variant="outline" className="font-mono bg-slate-50 text-slate-600 border-slate-200">
-                                                Lvl {user.level}
-                                            </Badge>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                <span className={`w-2 h-2 rounded-full ${user.language === 'Python' ? 'bg-blue-500' :
-                                                        user.language === 'JavaScript' ? 'bg-yellow-400' :
-                                                            user.language === 'C++' ? 'bg-purple-500' :
-                                                                user.language === 'Rust' ? 'bg-orange-600' : 'bg-slate-400'
-                                                    }`} />
-                                                {user.language}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <span className="font-bold text-slate-800 font-mono text-lg tracking-tight">
-                                                {user.xp.toLocaleString()}
-                                            </span>
-                                            <span className="text-xs text-slate-400 ml-1">XP</span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <Badge variant="outline" className="font-mono bg-slate-50 text-slate-600 border-slate-200">
+                                                    {user.solvedCount}
+                                                </Badge>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                    {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'N/A'}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <span className="font-bold text-slate-800 font-mono text-lg tracking-tight">
+                                                    {user.points.toLocaleString()}
+                                                </span>
+                                                <span className="text-xs text-slate-400 ml-1">XP</span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {filteredData.length === 0 && (
+                                        <tr>
+                                            <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                                                No users found.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </Card>
             </div>
         </div>

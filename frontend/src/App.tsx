@@ -4,48 +4,80 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { AIMentor } from "@/components/AIMentor";
+
+// Pages
 import Index from "./pages/Index";
-import Module from "./pages/Module";
 import Auth from "./pages/Auth";
-import Contests from "./pages/Contests";
 import Admin from "./pages/Admin";
+import Contests from "./pages/Contests";
+import Module from "./pages/Module";
+import Profile from "./pages/Profile";
 import CodePlayground from "./pages/CodePlayground";
 import CarouselShowcase from "./pages/CarouselShowcase";
-import Leaderboard from "./pages/Leaderboard"; // Added import for Leaderboard
-import Store from "./pages/Store"; // Added import for Store
-import Premium from "./pages/Premium"; // Added import for Premium
-import Profile from "./pages/Profile";
+import Leaderboard from "./pages/Leaderboard";
+import Store from "./pages/Store";
+import Premium from "./pages/Premium";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Toaster />
-        <Sonner />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <TooltipProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<Admin />} />
+
+            {/* Protected Admin Route */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/contests" element={<Contests />} />
             <Route path="/module/:id" element={<Module />} />
-            <Route path="/profile" element={<Profile />} />
+
+            {/* Protected User Routes */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/playground" element={<CodePlayground />} />
             <Route path="/showcase" element={<CarouselShowcase />} />
-            <Route path="/leaderboard" element={<Leaderboard />} /> {/* Added Route for Leaderboard */}
-            <Route path="/store" element={<Store />} /> {/* Added Route for Store */}
-            <Route path="/premium" element={<Premium />} /> {/* Added Route for Premium */}
+            <Route path="/leaderboard" element={<Leaderboard />} />
+
+            <Route
+              path="/store"
+              element={
+                <ProtectedRoute>
+                  <Store />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="/premium" element={<Premium />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <AIMentor />
+          <Toaster />
+          <Sonner />
         </BrowserRouter>
-      </ThemeProvider>
-    </TooltipProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
