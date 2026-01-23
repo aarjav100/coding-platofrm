@@ -11,21 +11,33 @@ const CodePlayground = () => {
   const [title, setTitle] = useState<string>("Code Playground");
 
   useEffect(() => {
-    // Get code from URL params (base64 encoded)
+    // Get code from URL params (base64 encoded) OR localStorage via draftId
     const encodedCode = searchParams.get("code");
     const language = searchParams.get("lang") || "javascript";
     const titleParam = searchParams.get("title");
+    const draftId = searchParams.get("draftId");
 
-    if (encodedCode) {
+    if (draftId) {
+      // Load from localStorage
+      const savedCode = localStorage.getItem(`draft_${draftId}`);
+      const savedLang = localStorage.getItem(`draft_lang_${draftId}`);
+
+      if (savedCode) setInitialCode(savedCode);
+      if (savedLang) setInitialLanguage(savedLang);
+      if (titleParam) setTitle(decodeURIComponent(titleParam));
+
+    } else if (encodedCode) {
       try {
         const decodedCode = atob(encodedCode);
         setInitialCode(decodedCode);
       } catch (e) {
         console.error("Failed to decode code:", e);
       }
+      setInitialLanguage(language);
+    } else {
+      setInitialLanguage(language);
     }
 
-    setInitialLanguage(language);
     if (titleParam) {
       setTitle(decodeURIComponent(titleParam));
     }
