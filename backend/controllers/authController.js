@@ -14,9 +14,16 @@ const registerUser = async (req, res) => {
     try {
         const { username, email, password, role } = req.body;
 
+        // Check if user exists by email
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'User with this email already exists' });
+        }
+
+        // Check if user exists by username
+        const usernameExists = await User.findOne({ username });
+        if (usernameExists) {
+            return res.status(400).json({ message: 'Username is already taken' });
         }
 
         const user = await User.create({
@@ -40,6 +47,11 @@ const registerUser = async (req, res) => {
             res.status(400).json({ message: 'Invalid user data' });
         }
     } catch (error) {
+        // Handle duplicate key error specifically
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue)[0];
+            return res.status(400).json({ message: `Duplicate value entered for ${field}, please choose another` });
+        }
         res.status(500).json({ message: error.message });
     }
 };
