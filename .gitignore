@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# npm
+npm-debug.log*
+npm-error.log*
+npm-verbose.log*
+
+# yarn
+yarn-debug.log*
+yarn-error.log*
+yarn-integrity
+
+# pnpm
+pnpm-debug.log*
+
+# bun
+bun.lockb
+
+# Testing
+/coverage
+/.nyc_output
+
+# Production
+/build
+/dist
+out/
+
+# Vite
+.vite
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+*.iml
+
+# OS
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+logs/
+*.log
+
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# OS temp files
+.Spotlight-V100
+.Trashes
+
+# Misc
+.cache
+.eslintcache

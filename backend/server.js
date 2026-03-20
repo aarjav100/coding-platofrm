@@ -27,6 +27,7 @@ app.use('/api/leaderboard', require('./routes/leaderboardRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/submissions', require('./routes/submissionRoutes'));
 app.use('/api/contests', require('./routes/contestRoutes'));
+app.use('/api/execute', require('./routes/executionRoutes'));
 
 // Static folder for uploads
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

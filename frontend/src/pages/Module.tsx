@@ -31,14 +31,14 @@ const Module = () => {
   const [activeTab, setActiveTab] = useState("lessons");
   const [selectedLessonIndex, setSelectedLessonIndex] = useState(0);
 
-  const { 
-    lessons, 
-    progress, 
-    loading, 
+  const {
+    lessons,
+    progress,
+    loading,
     userId,
-    isLessonUnlocked, 
-    getLessonProgress, 
-    updateProgress 
+    isLessonUnlocked,
+    getLessonProgress,
+    updateProgress
   } = useLessonProgress(id || '');
 
   if (!module) {
@@ -103,7 +103,7 @@ const Module = () => {
           </div>
           <h1 className="text-4xl font-bold mb-3 text-foreground">{module.title}</h1>
           <p className="text-lg text-muted-foreground mb-4">{module.description}</p>
-          
+
           {/* Progress Bar */}
           {lessons.length > 0 && (
             <Card className="bg-muted/30 border-border mb-4">
@@ -121,7 +121,7 @@ const Module = () => {
               </CardContent>
             </Card>
           )}
-          
+
           {/* Funny Fact Card */}
           <Card className="bg-gradient-to-r from-accent/10 to-primary/10 border-accent/20">
             <CardContent className="p-4">
@@ -315,36 +315,53 @@ const Module = () => {
             })}
           </TabsContent>
 
-          <TabsContent value="notes">
-            <Card className="border-border">
-              <CardContent className="notes-content prose prose-slate dark:prose-invert max-w-none p-8">
-                <ReactMarkdown
-                  components={{
-                    h1: ({ node, ...props }) => <h1 className="text-4xl font-bold mb-6 text-foreground border-b-4 border-primary pb-3" {...props} />,
-                    h2: ({ node, ...props }) => <h2 className="text-3xl font-bold mt-8 mb-4 text-foreground flex items-center gap-2 before:content-[''] before:w-1.5 before:h-8 before:bg-gradient-primary before:rounded-full" {...props} />,
-                    h3: ({ node, ...props }) => <h3 className="text-2xl font-semibold mt-6 mb-3 text-primary" {...props} />,
-                    h4: ({ node, ...props }) => <h4 className="text-xl font-semibold mt-4 mb-2 text-accent" {...props} />,
-                    p: ({ node, ...props }) => <p className="text-base leading-relaxed mb-4 text-foreground" {...props} />,
-                    strong: ({ node, ...props }) => <strong className="font-bold text-primary" {...props} />,
-                    em: ({ node, ...props }) => <em className="italic text-accent" {...props} />,
-                    code: ({ node, inline, ...props }: any) => 
-                      inline ? (
-                        <code className="px-2 py-1 bg-code-bg border border-code-border rounded text-accent font-mono text-sm" {...props} />
-                      ) : (
-                        <code className="block p-4 bg-code-bg border border-code-border rounded-lg my-4 font-mono text-sm overflow-x-auto" {...props} />
+          <TabsContent value="notes" className="space-y-6">
+            {module.content.notes.split(/(?=^##\s)/m).filter(Boolean).map((section, index) => (
+              <Card key={index} className="border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 group">
+                <CardContent className="notes-content prose prose-slate dark:prose-invert max-w-none p-6 sm:p-8">
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mb-6 text-foreground bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400" {...props} />,
+                      h2: ({ node, ...props }) => (
+                        <div className="flex items-center gap-3 mt-2 mb-6 pb-4 border-b border-border/50">
+                          <div className="h-8 w-1.5 rounded-full bg-gradient-to-b from-primary to-purple-500" />
+                          <h2 className="text-2xl font-bold text-foreground m-0" {...props} />
+                        </div>
                       ),
-                    ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-2 ml-4" {...props} />,
-                    ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-2 ml-4" {...props} />,
-                    li: ({ node, ...props }) => <li className="text-foreground leading-relaxed" {...props} />,
-                    blockquote: ({ node, ...props }) => (
-                      <blockquote className="border-l-4 border-accent bg-muted/30 pl-4 py-3 my-4 italic text-muted-foreground" {...props} />
-                    ),
-                  }}
-                >
-                  {module.content.notes}
-                </ReactMarkdown>
-              </CardContent>
-            </Card>
+                      h3: ({ node, ...props }) => <h3 className="text-xl font-semibold mt-6 mb-3 text-primary flex items-center gap-2" {...props} />,
+                      p: ({ node, ...props }) => <p className="text-base leading-7 mb-4 text-muted-foreground group-hover:text-foreground/90 transition-colors" {...props} />,
+                      strong: ({ node, ...props }) => <strong className="font-bold text-primary" {...props} />,
+                      em: ({ node, ...props }) => <em className="italic text-purple-400" {...props} />,
+                      code: ({ node, inline, ...props }: any) =>
+                        inline ? (
+                          <code className="px-1.5 py-0.5 bg-primary/10 border border-primary/20 rounded text-primary font-mono text-sm" {...props} />
+                        ) : (
+                          <div className="relative my-6 rounded-lg overflow-hidden border border-border/50 shadow-md">
+                            <div className="absolute top-0 left-0 w-full h-8 bg-muted/50 flex items-center px-4 gap-1.5 border-b border-border/50">
+                              <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                              <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                              <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                            </div>
+                            <code className="block p-4 pt-10 bg-[#020617] text-gray-200 font-mono text-sm overflow-x-auto leading-relaxed" {...props} />
+                          </div>
+                        ),
+                      ul: ({ node, ...props }) => <ul className="space-y-2 mb-6 ml-1" {...props} />,
+                      li: ({ node, ...props }) => (
+                        <li className="flex items-start gap-2 text-muted-foreground group-hover:text-foreground/90 transition-colors">
+                          <span className="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                          <span className="leading-7" {...props} />
+                        </li>
+                      ),
+                      blockquote: ({ node, ...props }) => (
+                        <blockquote className="border-l-4 border-primary/50 bg-primary/5 rounded-r-lg pl-4 py-3 my-6 italic text-muted-foreground" {...props} />
+                      ),
+                    }}
+                  >
+                    {section}
+                  </ReactMarkdown>
+                </CardContent>
+              </Card>
+            ))}
           </TabsContent>
 
           <TabsContent value="animations" className="space-y-4">

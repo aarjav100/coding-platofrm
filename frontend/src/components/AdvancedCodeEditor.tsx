@@ -493,31 +493,31 @@ const AdvancedCodeEditor = ({
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/30 via-transparent to-secondary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
       <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-primary/50 via-secondary/50 to-primary/50 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-700 pointer-events-none" />
 
-      {/* Editor Header - New Modern Design */}
-      <div className="flex items-center justify-between h-12 px-4 bg-gradient-to-b from-slate-900 to-slate-800 rounded-t-xl border-b border-white/10 select-none">
+      {/* Editor Header - Mac Style Light Theme */}
+      <div className="flex items-center justify-between h-14 px-4 bg-white border-b border-slate-200 select-none">
 
         {/* Left: Window Controls + Language Selector */}
         <div className="flex items-center gap-4">
-          <div className="flex gap-1.5 group-hover:opacity-100 transition-opacity">
-            <div className="w-3 h-3 bg-red-500 rounded-full shadow-sm" />
-            <div className="w-3 h-3 bg-yellow-400 rounded-full shadow-sm" />
-            <div className="w-3 h-3 bg-green-500 rounded-full shadow-sm" />
+          <div className="flex gap-2 group-hover:opacity-100 transition-opacity">
+            <div className="w-3 h-3 bg-[#ff5f56] rounded-full shadow-sm border border-[#e0443e]" />
+            <div className="w-3 h-3 bg-[#ffbd2e] rounded-full shadow-sm border border-[#dea123]" />
+            <div className="w-3 h-3 bg-[#27c93f] rounded-full shadow-sm border border-[#1aab29]" />
           </div>
 
-          <div className="h-4 w-px bg-white/10 mx-1" />
+          <div className="h-6 w-px bg-slate-200 mx-2" />
 
           <Select value={language} onValueChange={handleLanguageChange}>
-            <SelectTrigger className="h-8 border-0 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-medium gap-2 px-3 rounded-lg transition-all focus:ring-0 w-auto min-w-[120px]">
+            <SelectTrigger className="h-9 border-0 bg-slate-100/50 hover:bg-slate-100 text-slate-700 text-sm font-medium gap-2 px-4 rounded-lg transition-all focus:ring-0 w-auto min-w-[140px]">
               <SelectValue>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">{languageConfigs[language]?.icon}</span>
-                  <span>{languageConfigs[language]?.label}</span>
+                  <span className="text-base">{languageConfigs[language]?.icon}</span>
+                  <span className="text-slate-900 font-semibold">{languageConfigs[language]?.label}</span>
                 </div>
               </SelectValue>
             </SelectTrigger>
-            <SelectContent className="bg-slate-900 border-white/10 text-slate-200">
+            <SelectContent className="bg-white border-slate-200 text-slate-700 shadow-xl">
               {Object.entries(languageConfigs).map(([key, config]) => (
-                <SelectItem key={key} value={key} className="focus:bg-white/10 focus:text-white">
+                <SelectItem key={key} value={key} className="focus:bg-slate-50 focus:text-slate-900 cursor-pointer">
                   <div className="flex items-center gap-2">
                     <span>{config.icon}</span>
                     <span>{config.label}</span>
@@ -529,19 +529,14 @@ const AdvancedCodeEditor = ({
         </div>
 
         {/* Center: Stats */}
-        <div className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-400">
-          <div className="flex items-center gap-1.5" title="Execution Time">
-            <Clock className="w-3.5 h-3.5" />
-            <span>16ms</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 opacity-50">
-            <span>#</span>
-            <span>{problemId || '233'}</span>
-          </div>
+        <div className="hidden md:flex items-center gap-4 text-xs font-medium">
+          <Badge variant="secondary" className="bg-cyan-50 text-cyan-700 border-cyan-100 px-3 py-1">
+            <Hash className="w-3 h-3 mr-1" />
+            {problemId || '463'}
+          </Badge>
 
           {lastSaved && (
-            <div className="flex items-center gap-1.5 text-emerald-500 animate-in fade-in duration-500">
+            <div className="flex items-center gap-1.5 text-emerald-600 animate-in fade-in duration-500 font-medium">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               <span>Saved</span>
             </div>
@@ -549,152 +544,56 @@ const AdvancedCodeEditor = ({
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-1">
-          <input
-            type="file"
-            id="file-upload"
-            className="hidden"
-            accept=".js,.py,.cpp,.java,.go,.rs,.ts,.cs,.txt"
-            onChange={handleFileUpload}
-          />
+        <div className="flex items-center gap-2 text-slate-400">
+          <input type="file" id="file-upload" className="hidden" accept=".js,.py,.cpp,.java,.go,.rs,.ts,.cs,.txt" onChange={handleFileUpload} />
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
-                onClick={() => document.getElementById('file-upload')?.click()}
-              >
-                <Upload className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-slate-900 text-xs border-white/10">Upload Solution</TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
-                onClick={downloadCode}
-              >
-                <Download className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-slate-900 text-xs border-white/10">Download Solution</TooltipContent>
-          </Tooltip>
-
-          <div className="h-4 w-px bg-white/10 mx-1" />
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
-                onClick={() => {
+          <div className="flex items-center bg-slate-50 rounded-lg p-1 border border-slate-100">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-slate-900 hover:bg-white rounded-md transition-all" onClick={downloadCode}>
+                  <Download className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Download</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-slate-900 hover:bg-white rounded-md transition-all" onClick={() => {
                   const draftId = problemId || Date.now().toString();
                   localStorage.setItem(`draft_${draftId}`, code);
                   localStorage.setItem(`draft_lang_${draftId}`, language);
-                  const url = `/playground?draftId=${draftId}&title=${encodeURIComponent("Fullscreen Editor")}`;
-                  window.open(url, '_blank');
-                }}
-              >
-                <Maximize2 className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-slate-900 text-xs border-white/10">Open in New Tab</TooltipContent>
-          </Tooltip>
+                  window.open(`/playground?draftId=${draftId}`, '_blank');
+                }}>
+                  <Maximize2 className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Fullscreen</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-slate-900 hover:bg-white rounded-md transition-all" onClick={handleReset}>
+                  <RotateCcw className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Reset Code</TooltipContent>
+            </Tooltip>
+          </div>
 
-          {/* Settings Popover Hookup */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:rotate-45"
-              >
-                <Settings className="w-4 h-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-0 bg-slate-900 border-white/10 text-slate-200" align="end">
-              {/* Settings Content Reuse - Keeping original structure inside popover but styling it dark */}
-              <div className="p-4 border-b border-white/10 bg-white/5">
-                <h4 className="font-semibold flex items-center gap-2 text-sm">
-                  <Sparkles className="h-4 w-4 text-emerald-500" />
-                  Editor Settings
-                </h4>
-              </div>
-              <div className="p-4 space-y-5">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs font-medium text-slate-400">Font Size</Label>
-                    <span className="text-xs font-mono bg-white/10 px-2 py-0.5 rounded">{fontSize}px</span>
-                  </div>
-                  <Slider
-                    value={[fontSize]}
-                    onValueChange={(value) => setFontSize(value[0])}
-                    min={10}
-                    max={24}
-                    step={1}
-                    className="flex-1"
-                  />
-                </div>
-                <div className="space-y-3 pt-2 border-t border-white/10">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs text-slate-400">Word Wrap</Label>
-                    <Switch id="word-wrap" checked={wordWrap} onCheckedChange={setWordWrap} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs text-slate-400">Minimap</Label>
-                    <Switch id="minimap" checked={showMinimap} onCheckedChange={setShowMinimap} />
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 hover:bg-yellow-500/10 transition-colors"
-                onClick={handleGetHint}
-              >
-                <Lightbulb className="h-4 w-4 text-yellow-500" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Get AI hint</p>
-            </TooltipContent>
-          </Tooltip>
+          <div className="h-4 w-px bg-slate-200 mx-1" />
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 hover:bg-red-500/10 transition-colors"
-                onClick={handleDebug}
-              >
-                <Bug className="h-4 w-4 text-red-500" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Debug code</p>
-            </TooltipContent>
-          </Tooltip>
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-yellow-500 hover:bg-yellow-50 rounded-lg" onClick={handleGetHint}>
+            <Lightbulb className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:bg-red-50 rounded-lg" onClick={handleDebug}>
+            <Bug className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="flex flex-col lg:flex-row relative">
         {/* Code Editor */}
-        <div className="flex-1 border-b lg:border-b-0 lg:border-r border-border/50 relative" style={{ height: isFullscreen ? "calc(100vh - 200px)" : height }}>
-          {/* Editor glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none z-10 opacity-50" />
+        <div className="flex-1 border-b lg:border-b-0 lg:border-r border-slate-200 relative" style={{ height: isFullscreen ? "calc(100vh - 200px)" : height }}>
           <Editor
             height="100%"
             language={languageConfigs[language]?.monacoLang || "python"}
@@ -710,57 +609,57 @@ const AdvancedCodeEditor = ({
               tabSize,
               automaticLayout: true,
               wordWrap: wordWrap ? "on" : "off",
-              padding: { top: 16, bottom: 16 },
+              padding: { top: 20, bottom: 20 },
               fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
               fontLigatures: true,
               cursorBlinking: "smooth",
-              cursorSmoothCaretAnimation: "on",
-              smoothScrolling: true,
+              overviewRulerBorder: false,
+              hideCursorInOverviewRuler: true,
               renderLineHighlight: "all",
               bracketPairColorization: { enabled: true },
             }}
           />
-        </div >
+        </div>
 
-        {/* Input/Output Panel */}
-        < div className="w-full lg:w-96 flex flex-col bg-gradient-to-b from-muted/10 to-transparent" style={{ height: isFullscreen ? "calc(100vh - 200px)" : height }}>
+        {/* Input/Output Panel - Light Gray Theme */}
+        <div className="w-full lg:w-96 flex flex-col bg-slate-50/50" style={{ height: isFullscreen ? "calc(100vh - 200px)" : height }}>
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex flex-col h-full">
-            <TabsList className="grid w-full grid-cols-3 rounded-none border-b border-border/50 bg-muted/30 p-1 gap-1">
-              <TabsTrigger
-                value="input"
-                className="text-xs rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
-              >
-                <Terminal className="h-3 w-3 mr-1.5" />
-                Input
-              </TabsTrigger>
-              <TabsTrigger
-                value="output"
-                className="text-xs rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
-              >
-                <Zap className="h-3 w-3 mr-1.5" />
-                Output
-              </TabsTrigger>
-              <TabsTrigger
-                value="testcases"
-                className="text-xs rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
-              >
-                <CheckCircle className="h-3 w-3 mr-1.5" />
-                Tests
-              </TabsTrigger>
-            </TabsList>
+            <div className="px-4 pt-3 pb-0">
+              <TabsList className="w-full justify-start h-auto bg-slate-200/50 p-1 rounded-lg gap-1">
+                <TabsTrigger value="input" className="flex-1 rounded-md py-1.5 text-xs font-medium text-slate-500 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm transition-all">Input</TabsTrigger>
+                <TabsTrigger value="output" className="flex-1 rounded-md py-1.5 text-xs font-medium text-slate-500 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm transition-all">Output</TabsTrigger>
+                <TabsTrigger value="testcases" className="flex-1 rounded-md py-1.5 text-xs font-medium text-slate-500 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm transition-all">Tests</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="input" className="flex-1 m-0 p-4">
-              <div className="h-full flex flex-col">
-                <label className="text-xs text-muted-foreground mb-2 font-medium flex items-center gap-2">
-                  <Terminal className="h-3 w-3" />
-                  Custom Input
-                </label>
+              <div className="h-full flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-1">
+                <div className="px-3 py-2 border-b border-slate-100 bg-slate-50/50 flex items-center gap-2">
+                  <div className="w-1 h-4 bg-blue-500 rounded-full" />
+                  <span className="text-xs font-semibold text-slate-500 tracking-wider">CUSTOM INPUT</span>
+                </div>
                 <Textarea
                   placeholder="Enter your test input here..."
                   value={customInput}
                   onChange={(e) => setCustomInput(e.target.value)}
-                  className="flex-1 font-mono text-sm resize-none bg-muted/20 border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/50"
+                  className="flex-1 border-0 resize-none bg-transparent focus-visible:ring-0 text-slate-700 font-mono text-sm p-4 placeholder:text-slate-400"
                 />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="output" className="flex-1 m-0 p-4">
+              <div className="h-full bg-slate-900 rounded-xl border border-slate-800 shadow-sm overflow-hidden flex flex-col">
+                <div className="px-3 py-2 border-b border-slate-800 bg-slate-950/50 flex items-center gap-2">
+                  <div className="w-1 h-4 bg-emerald-500 rounded-full" />
+                  <span className="text-xs font-semibold text-slate-400 tracking-wider">CONSOLE OUTPUT</span>
+                </div>
+                <ScrollArea className="flex-1">
+                  <div className="p-4">
+                    <pre className="text-sm font-mono whitespace-pre-wrap text-emerald-400 leading-relaxed">
+                      {output || <span className="text-slate-600 italic">Run your code to see output...</span>}
+                    </pre>
+                  </div>
+                </ScrollArea>
               </div>
             </TabsContent>
 
