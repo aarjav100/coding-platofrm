@@ -19,15 +19,22 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install frontend dependencies
-        run: npm install
+        run: |
+          cd frontend
+          npm install
 
       - name: Build frontend
-        run: npm run build --if-present
+        run: |
+          cd frontend
+          npm run build --if-present
 
       - name: Lint frontend
-        run: npm run lint --if-present
+        run: |
+          cd frontend
+          npm run lint --if-present
 
       - name: Install backend dependencies
         run: |
