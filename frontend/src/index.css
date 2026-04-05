@@ -15,6 +15,18 @@
 All colors MUST be HSL.
 */
 
+.noise-overlay {
+  background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDhFzAVpnFzp-CwGmD-n467e-YmrqhV14h_QMW3bHYu2fUgr9HCzBIo63sDgrnCX_ZAwBeaq62hbvVowdvvrDVlRpNpBSdgfla02VBpaW3aVz3Vbc7NbonOY-GMNnfAc6rW8qS4TsJH0Q5NOfB6Oyhfspb-AJ02AjE_wQOiGlEnjfvrNzLaLi8H8NZlHEjlDOmWqW_I93kwWOLiaYSfaIjnXW6TWBIqQS3sH3OpKfEy-u7zXEuonSjh_Brkr-90Wn6CZRl6HVK-yiY);
+  opacity: 0.03;
+  pointer-events: none;
+}
+.emerald-glow {
+  background: radial-gradient(circle at center, rgba(78, 222, 163, 0.1) 0%, rgba(12, 14, 18, 0) 70%);
+}
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

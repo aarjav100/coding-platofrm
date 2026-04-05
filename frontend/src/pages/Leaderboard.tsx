@@ -1,19 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Medal, Crown, Search, Sparkles, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BackgroundEffects } from '@/components/BackgroundEffects';
+import { TopNav } from '@/components/TopNav';
 import api from '@/lib/api';
+import { Loader2 } from "lucide-react";
 
 interface LeaderboardUser {
-    _id: string;
-    username: string;
-    points: number;
-    solvedCount: number;
-    lastLogin: string;
+  _id: string;
+  username: string;
+  points: number;
+  solvedCount: number;
+  lastLogin: string;
 }
 
 const Leaderboard = () => {
@@ -33,159 +29,210 @@ const Leaderboard = () => {
                 setLoading(false);
             }
         };
-
         fetchLeaderboard();
     }, []);
-
-    const getRankIcon = (rank: number) => {
-        switch (rank) {
-            case 1: return <Crown className="w-6 h-6 text-yellow-500 fill-yellow-500 animate-bounce-slow" />;
-            case 2: return <Medal className="w-6 h-6 text-slate-400 fill-slate-300" />;
-            case 3: return <Medal className="w-6 h-6 text-orange-400 fill-orange-300" />;
-            default: return <span className="text-lg font-bold text-slate-500 w-6 text-center">{rank}</span>;
-        }
-    };
 
     const filteredData = leaderboardData.filter(user =>
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Mock currentUser logic since it's in the design
+    const userInfoString = localStorage.getItem('userInfo');
+    const currentUser = userInfoString ? JSON.parse(userInfoString) : null;
+    const currentUserRank = currentUser ? leaderboardData.findIndex(u => u.username === currentUser.username) + 1 : 0;
+    const currentUserData = currentUserRank > 0 ? leaderboardData[currentUserRank - 1] : null;
+
     return (
-        <div className="min-h-screen bg-[#f8fafc] font-sans pb-12">
-            {/* Header */}
-            <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-                <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <Link to="/" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
-                            ← Back to Dashboard
-                        </Link>
-                    </div>
-                    <h1 className="text-xl font-bold text-slate-800">Global Leaderboard</h1>
-                    <div className="w-24"></div> {/* Spacer */}
-                </div>
-            </div>
+        <div className="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary min-h-screen antialiased overflow-x-hidden">
+            <BackgroundEffects />
+            <TopNav />
+            
+            <main className="pt-24 pb-32 px-4 md:px-12 max-w-screen-xl mx-auto min-h-screen relative z-10">
+                {/* Hero Title Section */}
+                <section className="mb-12 relative">
+                    <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+                    <h1 className="font-headline text-5xl md:text-6xl font-black tracking-tighter mb-4 text-on-surface">THE <span className="text-primary">ELITE</span> ROSTER.</h1>
+                    <p className="text-on-surface-variant max-w-xl font-body leading-relaxed">The Obsidian Architect leaderboard showcases the top 0.1% of technical minds. Precision, speed, and architectural integrity define the ranks.</p>
+                </section>
 
-            <div className="container mx-auto px-4 py-8 max-w-4xl">
-                {/* Banner */}
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white mb-8 shadow-lg shadow-blue-500/20">
-                    <div className="relative z-10 flex items-center justify-between">
-                        <div>
-                            <h2 className="text-3xl font-extrabold mb-2">Rise to the Top</h2>
-                            <p className="text-blue-100 max-w-md">Compete with developers worldwide, earn XP, and showcase your coding mastery.</p>
+                {/* Stats Bento Overview (Asymmetric) */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                    <div className="md:col-span-2 bg-surface-container-low p-8 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <span className="material-symbols-outlined text-8xl">terminal</span>
                         </div>
-                        <Trophy className="w-24 h-24 text-yellow-400 opacity-80" />
-                    </div>
-                    {/* Decorative circles */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>
-                </div>
-
-                {/* Controls */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
-                    <Tabs defaultValue="all-time" className="w-full sm:w-auto" onValueChange={setPeriod}>
-                        <TabsList className="bg-white border border-slate-200">
-                            <TabsTrigger value="weekly" disabled>Weekly</TabsTrigger>
-                            <TabsTrigger value="monthly" disabled>Monthly</TabsTrigger>
-                            <TabsTrigger value="all-time">All Time</TabsTrigger>
-                        </TabsList>
-                    </Tabs>
-
-                    <div className="relative w-full sm:w-64">
-                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <Input
-                            placeholder="Search user..."
-                            className="pl-9 bg-white border-slate-200"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                </div>
-
-                {/* Leaderboard Table */}
-                <Card className="border-slate-200 shadow-sm bg-white/80 backdrop-blur-sm overflow-hidden">
-                    {loading ? (
-                        <div className="flex justify-center items-center py-12">
-                            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                        <div className="relative z-10">
+                            <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/60 mb-2">Platform Total</p>
+                            <h3 className="font-headline text-4xl font-bold mb-4">{loading ? '...' : leaderboardData.reduce((acc, user) => acc + (user.solvedCount || 0), 0).toLocaleString()}</h3>
+                            <p className="text-sm text-on-surface-variant">Active deployments verified across all architects.</p>
                         </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                        <th className="px-6 py-4 w-20 text-center">Rank</th>
-                                        <th className="px-6 py-4">User</th>
-                                        <th className="px-6 py-4 text-center">Problems Solved</th>
-                                        <th className="px-6 py-4">Last Active</th>
-                                        <th className="px-6 py-4 text-right">Total XP</th>
+                    </div>
+                    <div className="bg-surface-container-high p-8 flex flex-col justify-end">
+                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary mb-2">Success Rate</p>
+                        <h3 className="font-headline text-3xl font-bold">98.4%</h3>
+                    </div>
+                    <div className="bg-surface-container p-8 flex flex-col justify-end border-l border-primary/20">
+                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">Next Reset</p>
+                        <h3 className="font-headline text-3xl font-bold">04:12:55</h3>
+                    </div>
+                </div>
+
+                {/* Leaderboard Main Container */}
+                <div className="bg-surface-container-lowest overflow-hidden shadow-2xl relative border border-outline-variant/10 rounded-sm">
+                    {/* Tabs Navigation */}
+                    <div className="flex flex-col md:flex-row md:items-center border-b border-outline-variant/15 px-6 pt-6 gap-4 pb-4 md:pb-0">
+                        <div className="flex gap-2 w-full md:w-auto overflow-x-auto">
+                            <button className="px-6 py-2 md:py-4 border-b-2 border-primary text-primary font-mono text-xs uppercase tracking-widest transition-all">All-Time</button>
+                            <button className="px-6 py-2 md:py-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-mono text-xs uppercase tracking-widest transition-all hidden sm:block">Weekly</button>
+                            <button className="px-6 py-2 md:py-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-mono text-xs uppercase tracking-widest transition-all hidden sm:block">Daily</button>
+                        </div>
+                        <div className="md:ml-auto flex items-center gap-4">
+                            <div className="relative w-full md:w-auto min-w-[200px]">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-sm">search</span>
+                                <input 
+                                    className="bg-surface-container-low border-none focus:ring-1 focus:ring-primary pl-10 pr-4 py-2 text-xs font-mono w-full md:w-64 placeholder:text-outline/50 text-on-surface rounded-sm" 
+                                    placeholder="Filter developers..." 
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Leaderboard Table */}
+                    <div className="overflow-x-auto min-h-[300px]">
+                        {loading ? (
+                            <div className="flex justify-center items-center py-24">
+                                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+                            </div>
+                        ) : (
+                            <table className="w-full text-left border-collapse">
+                                <thead className="bg-surface-container-low">
+                                    <tr className="font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant/70">
+                                        <th className="px-6 md:px-8 py-5 font-medium w-16 md:w-24">Rank</th>
+                                        <th className="px-6 md:px-8 py-5 font-medium">Developer</th>
+                                        <th className="px-6 md:px-8 py-5 font-medium">Points</th>
+                                        <th className="px-6 md:px-8 py-5 font-medium text-center">Solved</th>
+                                        <th className="px-6 md:px-8 py-5 font-medium text-right hidden sm:table-cell">Success Rate</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    {filteredData.map((user, index) => (
-                                        <tr
-                                            key={user._id}
-                                            className={`group hover:bg-blue-50/50 transition-colors ${index < 3 ? 'bg-gradient-to-r from-transparent via-transparent' : ''} ${index === 0 ? 'to-yellow-50/30' :
-                                                index === 1 ? 'to-slate-50/30' :
-                                                    index === 2 ? 'to-orange-50/30' : ''
-                                                }`}
-                                        >
-                                            <td className="px-6 py-4 text-center">
-                                                <div className="flex items-center justify-center">
-                                                    {getRankIcon(index + 1)}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <Avatar className={`h-10 w-10 border-2 ${index === 0 ? 'border-yellow-400' :
-                                                        index === 1 ? 'border-slate-300' :
-                                                            index === 2 ? 'border-orange-300' : 'border-slate-100'
-                                                        }`}>
-                                                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`} />
-                                                        <AvatarFallback className="bg-slate-200 text-slate-600 font-bold">
-                                                            {user.username.slice(0, 2).toUpperCase()}
-                                                        </AvatarFallback>
-                                                    </Avatar>
-                                                    <div>
-                                                        <div className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
-                                                            {user.username}
+                                <tbody className="divide-y divide-outline-variant/10">
+                                    {filteredData.map((user, index) => {
+                                        const rank = index + 1;
+                                        
+                                        // Rank styles
+                                        let rankClasses = "text-on-surface-variant font-headline font-black text-sm";
+                                        if (rank === 1) rankClasses = "bg-primary/20 text-primary font-headline font-black text-sm";
+                                        
+                                        // Tags
+                                        let tagText = "Architect";
+                                        let tagClasses = "text-outline";
+                                        if (rank === 1) { tagText = "Lvl 99 Architect"; tagClasses = "text-primary border-primary/30 bg-primary/10"; }
+                                        else if (rank === 2) { tagText = "Lead Engineer"; tagClasses = "text-secondary border-secondary/30 bg-secondary/10"; }
+                                        else if (rank === 3) { tagText = "Senior Dev"; tagClasses = "text-on-surface-variant border-surface-variant bg-surface-container-highest"; }
+
+                                        return (
+                                            <tr key={user._id} className="group hover:bg-surface-container-high transition-colors">
+                                                <td className="px-6 md:px-8 py-6">
+                                                    <span className={`flex items-center justify-center w-8 h-8 rounded-full ${rankClasses}`}>
+                                                        {rank < 10 ? `0${rank}` : rank}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 md:px-8 py-6">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-10 h-10 rounded-sm overflow-hidden bg-surface-container-highest flex-shrink-0">
+                                                            <img 
+                                                                className="w-full h-full object-cover" 
+                                                                alt="Avatar" 
+                                                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`}
+                                                            />
                                                         </div>
-                                                        {index === 0 && (
-                                                            <Badge variant="secondary" className="text-[10px] bg-yellow-100 text-yellow-700 h-5 px-1.5 gap-1">
-                                                                <Sparkles className="w-3 h-3" /> Champion
-                                                            </Badge>
-                                                        )}
+                                                        <div>
+                                                            <p className="font-headline font-bold text-on-surface leading-none mb-1 group-hover:text-primary transition-colors">{user.username}</p>
+                                                            <p className={`inline-block px-1.5 py-0.5 rounded-sm font-mono text-[9px] uppercase border ${tagClasses}`}>
+                                                                {tagText}
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <Badge variant="outline" className="font-mono bg-slate-50 text-slate-600 border-slate-200">
-                                                    {user.solvedCount}
-                                                </Badge>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                    {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'N/A'}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <span className="font-bold text-slate-800 font-mono text-lg tracking-tight">
+                                                </td>
+                                                <td className="px-6 md:px-8 py-6 font-mono text-sm md:text-base font-bold text-on-surface text-primary/90">
                                                     {user.points.toLocaleString()}
-                                                </span>
-                                                <span className="text-xs text-slate-400 ml-1">XP</span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {filteredData.length === 0 && (
+                                                </td>
+                                                <td className="px-6 md:px-8 py-6 text-center font-mono text-sm text-on-surface-variant">
+                                                    {user.solvedCount || 0}
+                                                </td>
+                                                <td className="px-6 md:px-8 py-6 text-right hidden sm:table-cell">
+                                                    <span className={`px-2 py-1 font-mono text-xs rounded-sm ${rank === 1 ? 'bg-primary/10 text-primary' : rank === 2 ? 'bg-secondary/10 text-secondary' : 'bg-surface-container-highest text-on-surface-variant'}`}>
+                                                        {rank === 1 ? '99.8%' : rank === 2 ? '97.2%' : '94.8%'}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                    {filteredData.length === 0 && !loading && (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
-                                                No users found.
+                                            <td colSpan={5} className="px-8 py-12 text-center text-outline">
+                                                No architects found matching "{searchTerm}"
                                             </td>
                                         </tr>
                                     )}
                                 </tbody>
                             </table>
+                        )}
+                    </div>
+                </div>
+                
+                {/* Highlighted User Position (Floating Bottom Anchor) */}
+                {currentUser && currentUserData && (
+                    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-screen-xl z-40 hidden md:block">
+                        <div className="bg-surface-container-lowest/80 border border-primary/20 backdrop-blur-xl p-4 rounded-sm flex flex-col md:flex-row md:items-center justify-between shadow-[0_0_50px_rgba(0,0,0,0.5)] gap-4">
+                            <div className="flex items-center gap-8">
+                                <div className="flex items-center gap-3">
+                                    <span className="font-mono text-primary font-black">#{currentUserRank}</span>
+                                    <div className="w-8 h-8 rounded-sm bg-primary/20 flex items-center justify-center overflow-hidden">
+                                        <img className="w-full h-full object-cover" alt="User avatar" src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.username}`} />
+                                    </div>
+                                    <span className="font-headline font-bold text-on-surface">You (The Architect)</span>
+                                </div>
+                                <div className="hidden md:flex gap-6 items-center border-l border-primary/20 pl-8">
+                                    <div>
+                                        <p className="text-[10px] uppercase font-mono text-primary/60">Current Pts</p>
+                                        <p className="text-sm font-bold text-on-surface">{currentUserData.points.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] uppercase font-mono text-primary/60">Solved</p>
+                                        <p className="text-sm font-bold text-on-surface">{currentUserData.solvedCount || 0}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex justify-between md:justify-end items-center w-full md:w-auto gap-4">
+                                <p className="text-xs font-mono text-on-surface-variant hidden lg:block">Keep pushing limits.</p>
+                                <button className="w-full md:w-auto bg-primary text-on-primary px-4 py-2 text-xs font-headline font-black uppercase tracking-tighter rounded-sm hover:brightness-110 active:scale-95 transition-all">
+                                    View Full Stats
+                                </button>
+                            </div>
                         </div>
-                    )}
-                </Card>
+                    </div>
+                )}
+            </main>
+
+            {/* Footer Shell */}
+            <footer className="bg-[#0c0e12] w-full border-t border-[#333539] flex flex-col md:flex-row justify-between items-center px-12 py-8 mt-auto relative z-10">
+                <div className="flex flex-col items-center md:items-start gap-4">
+                    <span className="text-lg font-bold text-primary font-headline tracking-tighter">NexCode</span>
+                    <p className="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest text-slate-500">© 2024 NexCode. Precision engineered for the Obsidian Architect.</p>
+                </div>
+                <div className="flex gap-8 mt-6 md:mt-0">
+                    <a className="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-primary transition-colors" href="#">Documentation</a>
+                    <a className="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
+                    <a className="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-primary transition-colors" href="#">Contact Support</a>
+                </div>
+            </footer>
+
+            {/* Decorative Elements */}
+            <div className="fixed top-0 right-0 w-1/3 h-screen pointer-events-none z-0 overflow-hidden">
+                <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]"></div>
             </div>
         </div>
     );

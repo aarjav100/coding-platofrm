@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodeForge Documentation | The Obsidian Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface": "#eaeaf5",
+              "on-secondary": "#001b3d",
+              "surface-tint": "#10b981",
+              "inverse-surface": "#faf8ff",
+              "tertiary": "#3b82f6",
+              "surface-container-low": "#0d0f14",
+              "tertiary-fixed": "#3b82f6",
+              "secondary-container": "#1e3a8a",
+              "tertiary-fixed-dim": "#60a5fa",
+              "on-secondary-container": "#dbeafe",
+              "on-background": "#eaeaf5",
+              "secondary-fixed-dim": "#93c5fd",
+              "primary-fixed-dim": "#34d399",
+              "surface-variant": "#1a1d24",
+              "secondary-dim": "#60a5fa",
+              "on-secondary-fixed-variant": "#1e40af",
+              "on-primary-fixed": "#064e3b",
+              "outline-variant": "#374151",
+              "inverse-primary": "#059669",
+              "error-dim": "#f87171",
+              "secondary": "#3b82f6",
+              "on-tertiary-fixed": "#1e3a8a",
+              "surface-container-high": "#161a22",
+              "primary-dim": "#34d399",
+              "primary-fixed": "#10b981",
+              "on-error-container": "#fee2e2",
+              "background": "#0a0c10",
+              "on-primary-fixed-variant": "#065f46",
+              "tertiary-container": "#dbeafe",
+              "surface-container": "#11141b",
+              "on-tertiary-container": "#1e3a8a",
+              "inverse-on-surface": "#4b5563",
+              "on-primary-container": "#064e3b",
+              "on-error": "#450a0a",
+              "tertiary-dim": "#60a5fa",
+              "on-primary": "#064e3b",
+              "on-tertiary-fixed-variant": "#1e40af",
+              "outline": "#6b7280",
+              "error-container": "#7f1d1d",
+              "error": "#ef4444",
+              "surface-bright": "#22272e",
+              "surface": "#0a0c10",
+              "primary": "#10b981",
+              "on-tertiary": "#ffffff",
+              "surface-container-lowest": "#000000",
+              "surface-container-highest": "#1c2128",
+              "primary-container": "#10b981",
+              "on-surface-variant": "#9ca3af",
+              "on-secondary-fixed": "#1e3a8a",
+              "secondary-fixed": "#bfdbfe",
+              "surface-dim": "#0a0c10"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk", "sans-serif"],
+              "body": ["DM Sans", "sans-serif"],
+              "label": ["DM Sans", "sans-serif"],
+              "mono": ["DM Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(17, 20, 27, 0.6);
+            backdrop-filter: blur(12px);
+        }
+        .noise-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary">
+<div class="fixed inset-0 noise-overlay z-0"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#11141b]/60 backdrop-blur-xl flex justify-between items-center px-8 h-20 w-full max-w-none shadow-[0px_24px_48px_rgba(0,0,0,0.5)] border-b border-outline-variant/10">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#10b981] to-[#3b82f6] font-headline">CodeForge</span>
+<div class="hidden md:flex gap-8 font-['Space_Grotesk'] font-bold tracking-tight">
+<a class="text-[#eaeaf5]/70 hover:text-primary transition-colors duration-300" href="#">Platform</a>
+<a class="text-primary relative after:content-[''] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-primary after:rounded-full transition-colors duration-300" href="#">Docs</a>
+<a class="text-[#eaeaf5]/70 hover:text-primary transition-colors duration-300" href="#">Pricing</a>
+<a class="text-[#eaeaf5]/70 hover:text-primary transition-colors duration-300" href="#">Enterprise</a>
+<a class="text-[#eaeaf5]/70 hover:text-primary transition-colors duration-300" href="#">Blog</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-primary text-on-surface placeholder:text-on-surface-variant" placeholder="Search documentation..." type="text"/>
+</div>
+<button class="text-[#eaeaf5]/70 font-['Space_Grotesk'] font-bold hover:text-primary transition-colors">Login</button>
+<button class="bg-primary-container text-on-primary-container font-['Space_Grotesk'] font-bold px-6 py-2 rounded-lg hover:brightness-110 transition-all active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.3)]">Sign Up</button>
+</div>
+</nav>
+<div class="relative z-10 pt-20 flex min-h-screen">
+<!-- Left Sidebar Navigation -->
+<aside class="hidden lg:block w-72 bg-surface-container-low border-r border-outline-variant/10 fixed h-[calc(100vh-5rem)] overflow-y-auto p-8 custom-scrollbar">
+<div class="space-y-10">
+<section>
+<h5 class="text-primary-fixed uppercase tracking-widest text-[10px] font-black mb-6">Getting Started</h5>
+<ul class="space-y-4">
+<li><a class="text-on-surface font-medium hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="rocket_launch">rocket_launch</span>Introduction</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>Quick Start</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>CLI Tools</a></li>
+</ul>
+</section>
+<section>
+<h5 class="text-secondary-fixed-dim uppercase tracking-widest text-[10px] font-black mb-6">API Reference</h5>
+<ul class="space-y-4">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="api">api</span>Authentication</a></li>
+<li><a class="text-primary font-bold border-l-2 border-primary pl-4 -ml-4 flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="database">database</span>Data Models</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="webhook">webhook</span>Webhooks</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="error">error</span>Error Codes</a></li>
+</ul>
+</section>
+<section>
+<h5 class="text-tertiary-fixed-dim uppercase tracking-widest text-[10px] font-black mb-6">SDKs &amp; Libraries</h5>
+<ul class="space-y-4">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="javascript">javascript</span>Node.js</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="code">code</span>Python</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="android">android</span>Kotlin</a></li>
+</ul>
+</section>
+<section>
+<h5 class="text-outline uppercase tracking-widest text-[10px] font-black mb-6">Components</h5>
+<ul class="space-y-4">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="grid_view">grid_view</span>Grid System</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-sm" data-icon="smart_button">smart_button</span>Action Kits</a></li>
+</ul>
+</section>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-72 lg:mr-72 p-8 md:p-16 max-w-5xl mx-auto">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-xs font-mono text-on-surface-variant mb-12">
+<a class="hover:text-primary" href="#">Docs</a>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<a class="hover:text-primary" href="#">API Reference</a>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary-fixed">Data Models</span>
+</nav>
+<!-- Article -->
+<article class="prose prose-invert max-w-none">
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 leading-[0.9] text-transparent bg-clip-text bg-gradient-to-br from-on-surface to-on-surface-variant">
+                Data Models &amp; Schema Architecture
+            </h1>
+<p class="text-xl text-on-surface-variant leading-relaxed mb-12 font-light">
+                The CodeForge schema is built on a high-concurrency architecture. Understand how our entity-relation model maps to real-time events and high-throughput data streams.
+            </p>
+<div class="h-px w-full bg-gradient-to-r from-primary/20 via-transparent to-transparent mb-12"></div>
+<h2 class="font-headline text-3xl font-bold mb-6 flex items-center gap-4">
+<span class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary text-sm font-mono">01</span>
+                Core Entity Logic
+            </h2>
+<p class="mb-8">
+                Every object in the CodeForge ecosystem inherits from a base <code class="bg-surface-container-high px-1.5 py-0.5 rounded text-secondary font-mono">ForgeObject</code>. This ensures consistent metadata handling across all SDKs and prevents schema drift during rapid deployment cycles.
+            </p>
+<!-- Code Snippet -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden mb-12 border border-outline-variant/10 shadow-2xl">
+<div class="bg-surface-container-high px-6 py-3 flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-error/40"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-primary/40"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-secondary/40"></div>
+</div>
+<span class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">schema.typescript</span>
+</div>
+<div class="p-8 font-mono text-sm leading-relaxed overflow-x-auto">
+<pre class="text-[#eaeaf5]"><code><span class="text-secondary">interface</span> <span class="text-primary">EntityRecord</span> {
+  <span class="text-on-surface-variant">// Unique identifier for the forged object</span>
+  <span class="text-primary">id</span>: <span class="text-secondary">string</span>;
+  <span class="text-primary">timestamp</span>: <span class="text-secondary">number</span>;
+  <span class="text-primary">meta</span>: {
+    <span class="text-primary">version</span>: <span class="text-secondary">"2.4.0-obsidian"</span>;
+    <span class="text-primary">shard</span>: <span class="text-secondary">"us-east-1"</span>;
+  };
+  <span class="text-primary">execute</span>(): <span class="text-secondary">Promise</span>&lt;<span class="text-primary">void</span>&gt;;
+}</code></pre>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-6">Validation Protocols</h3>
+<p class="mb-12">
+                Before any data is persisted to the high-throughput layer, it must pass through the <span class="text-primary font-bold">Obsidian Validator</span>. This ensures that only schema-compliant packets are processed by our real-time workers.
+            </p>
+<!-- Bento Info Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+<div class="bg-surface-container p-8 rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-all group cursor-default">
+<span class="material-symbols-outlined text-primary mb-4 block text-3xl" data-icon="security">security</span>
+<h4 class="font-headline text-lg font-bold mb-2 group-hover:text-primary transition-colors">Encrypted by Default</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">All schema fields marked as sensitive are automatically encrypted using AES-256-GCM before hitting the database.</p>
+</div>
+<div class="bg-surface-container p-8 rounded-xl border border-outline-variant/10 hover:border-secondary/30 transition-all group cursor-default">
+<span class="material-symbols-outlined text-secondary mb-4 block text-3xl" data-icon="speed">speed</span>
+<h4 class="font-headline text-lg font-bold mb-2 group-hover:text-secondary transition-colors">Low Latency Sync</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Our data model is optimized for sub-10ms synchronization across all global edge nodes.</p>
+</div>
+</div>
+<!-- Feedback Section -->
+<section class="bg-surface-container-low rounded-2xl p-10 border border-outline-variant/10 text-center">
+<h4 class="font-headline text-xl font-bold mb-2">Was this page helpful?</h4>
+<p class="text-on-surface-variant text-sm mb-6">Your feedback helps us build the ultimate architect experience.</p>
+<div class="flex justify-center gap-4">
+<button class="flex items-center gap-2 px-6 py-2 bg-surface-variant rounded-full hover:bg-primary/20 hover:text-primary transition-all border border-transparent hover:border-primary/40">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span>
+<span class="text-sm font-bold">Yes</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-2 bg-surface-variant rounded-full hover:bg-error/20 hover:text-error transition-all border border-transparent hover:border-error/40">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_down">thumb_down</span>
+<span class="text-sm font-bold">No</span>
+</button>
+</div>
+</section>
+</article>
+<!-- Navigation Buttons -->
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-outline-variant/10">
+<a class="flex flex-col gap-1 group" href="#">
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest font-mono">Previous</span>
+<span class="text-on-surface font-headline font-bold group-hover:text-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+                    Authentication
+                </span>
+</a>
+<a class="flex flex-col gap-1 items-end group" href="#">
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest font-mono">Next</span>
+<span class="text-on-surface font-headline font-bold group-hover:text-primary transition-colors flex items-center gap-2">
+                    Webhooks
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</span>
+</a>
+</div>
+</main>
+<!-- Right Sidebar (TOC) -->
+<aside class="hidden xl:block w-72 fixed right-0 h-[calc(100vh-5rem)] p-8">
+<h5 class="text-on-surface-variant uppercase tracking-widest text-[10px] font-black mb-6">On this page</h5>
+<ul class="space-y-4 border-l border-outline-variant/20">
+<li><a class="text-primary text-xs font-bold pl-4 border-l-2 border-primary -ml-px block" href="#">Introduction</a></li>
+<li><a class="text-on-surface-variant text-xs hover:text-primary transition-colors pl-4 block" href="#">Core Entity Logic</a></li>
+<li><a class="text-on-surface-variant text-xs hover:text-primary transition-colors pl-8 block" href="#">ForgeObject Specs</a></li>
+<li><a class="text-on-surface-variant text-xs hover:text-primary transition-colors pl-4 block" href="#">Validation Protocols</a></li>
+<li><a class="text-on-surface-variant text-xs hover:text-primary transition-colors pl-4 block" href="#">Obsidian Validator</a></li>
+<li><a class="text-on-surface-variant text-xs hover:text-primary transition-colors pl-4 block" href="#">Performance Metrics</a></li>
+</ul>
+<div class="mt-12 p-6 rounded-xl bg-gradient-to-br from-secondary/10 to-primary/10 border border-outline-variant/10">
+<h6 class="text-sm font-bold mb-2">Need help?</h6>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-4">Can't find what you're looking for? Join our developer discord.</p>
+<button class="w-full py-2 bg-on-surface text-background text-xs font-bold rounded-lg hover:brightness-110 transition-all">Ask Community</button>
+</div>
+</aside>
+</div>
+<!-- Footer -->
+<footer class="bg-[#0a0c10] w-full py-12 px-8 mt-auto border-t border-outline-variant/10 relative z-20">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="text-xl font-black text-primary font-headline">CodeForge</span>
+<p class="font-['DM_Sans'] text-sm tracking-normal text-[#eaeaf5]/50">© 2024 CodeForge. All rights reserved. Built for the obsidian architect.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-[#eaeaf5]/50 hover:text-secondary transition-all hover:underline decoration-secondary text-sm" href="#">Privacy Policy</a>
+<a class="text-[#eaeaf5]/50 hover:text-secondary transition-all hover:underline decoration-secondary text-sm" href="#">Terms of Service</a>
+<a class="text-[#eaeaf5]/50 hover:text-secondary transition-all hover:underline decoration-secondary text-sm" href="#">Cookie Policy</a>
+<a class="text-[#eaeaf5]/50 hover:text-secondary transition-all hover:underline decoration-secondary text-sm" href="#">Security</a>
+</div>
+</div>
+</footer>
+</body></html>

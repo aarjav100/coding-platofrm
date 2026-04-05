@@ -1,451 +1,217 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Code2, Clock, ArrowLeft, Timer, Sparkles, Search, Filter,
-  ChevronRight, CheckCircle2, Trophy, List, Layout, Play, Terminal
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import AdvancedCodeEditor from "@/components/AdvancedCodeEditor";
-import { cn } from "@/lib/utils";
-
-// --- Mock Data ---
-
-interface ContestProblem {
-  id: string;
-  title: string;
-  description: string;
-  points: number;
-  difficulty: "Easy" | "Medium" | "Hard";
-  inputFormat: string;
-  outputFormat: string;
-  sampleInput: string;
-  sampleOutput: string;
-  examples?: { input: string; output: string; explanation?: string }[];
-}
-
-const MOCK_PROBLEMS: ContestProblem[] = [
-  {
-    id: "p1",
-    title: "Two Sum",
-    description: "Given an array of integers, find two numbers that add up to a target value.",
-    points: 5,
-    difficulty: "Easy",
-    inputFormat: "First line: n (array size)\nSecond line: n integers\nThird line: target",
-    outputFormat: "Two indices of the numbers",
-    sampleInput: "4\n2 7 11 15\n9",
-    sampleOutput: "0 1",
-    examples: [
-      {
-        input: "4\n2 7 11 15\n9",
-        output: "0 1",
-        explanation: "Because nums[0] + nums[1] == 9, we return [0, 1]."
-      },
-      {
-        input: "3\n3 2 4\n6",
-        output: "1 2",
-        explanation: "Because nums[1] + nums[2] == 6, we return [1, 2]."
-      }
-    ]
-  },
-  {
-    id: "p2",
-    title: "Palindrome Check",
-    description: "Determine if a given string is a palindrome (reads the same forwards and backwards).",
-    points: 8,
-    difficulty: "Easy",
-    inputFormat: "A single string S",
-    outputFormat: "true or false",
-    sampleInput: "racecar",
-    sampleOutput: "true",
-    examples: [
-      {
-        input: "racecar",
-        output: "true"
-      },
-      {
-        input: "hello",
-        output: "false"
-      }
-    ]
-  },
-  // ... (rest of the mock data would ideally be updated similarly, but for brevity/safety we focus on the structure and first few)
-  {
-    id: "p3",
-    title: "Binary Search Tree",
-    description: "Implement a function to insert a node into a Binary Search Tree.",
-    points: 15,
-    difficulty: "Medium",
-    inputFormat: "First line: N (number of nodes)\nSecond line: N integers",
-    outputFormat: "Pre-order traversal of the tree",
-    sampleInput: "5\n4 2 7 1 3",
-    sampleOutput: "4 2 1 3 7"
-  },
-  {
-    id: "p4",
-    title: "Longest Substring",
-    description: "Find the length of the longest substring without repeating characters.",
-    points: 18,
-    difficulty: "Medium",
-    inputFormat: "A string S",
-    outputFormat: "Integer length",
-    sampleInput: "abcabcbb",
-    sampleOutput: "3"
-  },
-  {
-    id: "p5",
-    title: "Merge Intervals",
-    description: "Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals.",
-    points: 20,
-    difficulty: "Medium",
-    inputFormat: "N lines containing start and end times",
-    outputFormat: "Merged intervals",
-    sampleInput: "1 3\n2 6\n8 10\n15 18",
-    sampleOutput: "1 6\n8 10\n15 18"
-  },
-  {
-    id: "p6",
-    title: "Graph Traversal",
-    description: "Perform a BFS traversal on a graph starting from node 0.",
-    points: 25,
-    difficulty: "Hard",
-    inputFormat: "Adjacency matrix or list",
-    outputFormat: "Nodes in BFS order",
-    sampleInput: "4\n0 1\n0 2\n1 2\n2 0\n2 3\n3 3",
-    sampleOutput: "0 1 2 3"
-  },
-  {
-    id: "p7",
-    title: "Dynamic Programming",
-    description: "Solve the classic Knapsack problem.",
-    points: 30,
-    difficulty: "Hard",
-    inputFormat: "Weights and Values arrays",
-    outputFormat: "Maximum value",
-    sampleInput: "3 50\n10 60\n20 100\n30 120",
-    sampleOutput: "220"
-  },
-];
-
-const MOCK_LEADERBOARD = [
-  { rank: 1, name: "AlgoWizard", score: 300, lang: "C++" },
-  { rank: 2, name: "Pythonista", score: 290, lang: "Python" },
-  { rank: 3, name: "JavaGuru", score: 280, lang: "Java" },
-  { rank: 4, name: "CodeNinja", score: 250, lang: "JS" },
-  { rank: 5, name: "Rustacean", score: 240, lang: "Rust" },
-];
-
-// --- Theme Colors ---
-const THEME = {
-  bg: "bg-[#0f172a]",
-  card: "bg-white/5 backdrop-blur-lg border-white/10",
-  primary: "bg-[#3b82f6]",
-  accent: "text-[#22c55e]",
-  text: "text-[#e5e7eb]",
-  textMuted: "text-slate-400",
-};
+import React, { useState } from 'react';
+import { BackgroundEffects } from '@/components/BackgroundEffects';
+import { TopNav } from '@/components/TopNav';
+import { SidebarHUD } from '@/components/SidebarHUD';
 
 const Contests = () => {
-  const [selectedProblem, setSelectedProblem] = useState<ContestProblem>(MOCK_PROBLEMS[0]);
-  const [code, setCode] = useState("// Write your solution here...");
-  const [language, setLanguage] = useState("javascript");
-  const [output, setOutput] = useState("");
-  const [activeTab, setActiveTab] = useState("description"); // description, input, output, examples
-  const [isConsoleOpen, setIsConsoleOpen] = useState(true);
-
-  // Mock Console/Output Logic
-  const handleRun = () => {
-    setOutput("Running code...\n\n> Output:\nHello World\n\n> Execution Time: 45ms");
-  };
+  const [activeTab, setActiveTab] = useState('ACTIVE CONTESTS');
 
   return (
-    <div className={`min-h-screen ${THEME.bg} font-sans text-slate-200 flex flex-col overflow-hidden selection:bg-blue-500/30`}>
-      {/* Header */}
-      <header className="bg-slate-900/50 backdrop-blur-md border-b border-white/10 sticky top-0 z-50 h-14 flex items-center px-6 justify-between">
-        <div className="flex items-center gap-4">
-          <div className="bg-blue-600/20 p-1.5 rounded-lg border border-blue-500/30">
-            <Code2 className="w-5 h-5 text-blue-400" />
-          </div>
-          <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            Weekly Contest #102
-          </h1>
-        </div>
-        <div className="flex items-center gap-4">
-          {/* Timer Mock */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-white/10 text-xs font-mono text-blue-300">
-            <Timer className="w-3.5 h-3.5" />
-            <span>01:45:22</span>
-          </div>
-
-          <Link to="/">
-            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hover:bg-white/5">Exit</Button>
-          </Link>
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-600 border border-white/10 text-white flex items-center justify-center font-bold text-xs shadow-lg shadow-blue-900/20">
-            JD
-          </div>
-        </div>
-      </header>
-
-      {/* Main Grid Layout */}
-      <main className="flex-1 overflow-hidden p-4 gap-4 grid grid-cols-12 grid-rows-[1fr_auto]">
-
-        {/* COL 1: Problem List (Sidebar) */}
-        <Card className={`col-span-2 ${THEME.card} flex flex-col overflow-hidden h-full rounded-xl border-white/10 shadow-2xl`}>
-          <div className="p-3 border-b border-white/10 bg-white/5">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-              <List className="w-3.5 h-3.5" /> Problems
-            </h2>
-          </div>
-          <ScrollArea className="flex-1">
-            <div className="p-2 space-y-1">
-              {MOCK_PROBLEMS.map((p, idx) => (
-                <div
-                  key={p.id}
-                  onClick={() => setSelectedProblem(p)}
-                  className={cn(
-                    "group px-3 py-2.5 rounded-lg cursor-pointer transition-all border border-transparent",
-                    selectedProblem.id === p.id
-                      ? "bg-blue-600/20 border-blue-500/30 shadow-inner"
-                      : "hover:bg-white/5"
-                  )}
-                >
-                  <div className="flex justify-between items-start mb-1">
-                    <span className={cn(
-                      "text-xs font-bold mr-2",
-                      selectedProblem.id === p.id ? "text-blue-400" : "text-slate-500"
-                    )}>
-                      {String.fromCharCode(65 + idx)}.
-                    </span>
-                    <Badge variant="outline" className={cn(
-                      "text-[10px] h-4 px-1 border-0 bg-opacity-20",
-                      p.difficulty === 'Easy' ? "bg-green-500 text-green-400" :
-                        p.difficulty === 'Medium' ? "bg-yellow-500 text-yellow-400" :
-                          "bg-red-500 text-red-400"
-                    )}>
-                      {p.points}
-                    </Badge>
-                  </div>
-                  <h3 className={cn(
-                    "text-sm font-medium leading-tight",
-                    selectedProblem.id === p.id ? "text-white" : "text-slate-400 group-hover:text-slate-200"
-                  )}>
-                    {p.title}
-                  </h3>
+    <div className="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary min-h-screen">
+      <BackgroundEffects />
+      
+      <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <div className="layout-container flex h-full grow flex-col">
+          <TopNav />
+          
+          <main className="flex flex-col md:flex-row flex-1 md:pr-10 lg:pr-20">
+            <div className="hidden md:block h-full">
+              <SidebarHUD />
+            </div>
+            
+            {/* Content Area */}
+            <div className="flex-1 flex flex-col p-6 md:p-10 gap-10">
+              {/* Featured Banner */}
+              <section className="relative group rounded-lg overflow-hidden min-h-[300px] md:min-h-[400px] flex flex-col justify-end p-8 md:p-12 border border-outline-variant/20">
+                <div 
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
+                  style={{
+                    backgroundImage: `linear-gradient(to top, #111318 0%, rgba(17, 19, 24, 0.4) 50%, rgba(17, 19, 24, 0) 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFKbf9yKyf8gXIjYz6QUvrKpMFR4f8wa9MCLtlQXAbw5-MKAtbA4D0-L0LX2-AH3CzRIoD4ER0FxyZXaLGYQN1UMWJZnvGKut3-pqZVr_hDyNqy7COMeuE_kG3QuUfiJoR6B5rAQs6BPKiRcUKHECsXxIMhi2o94rf8toBO0f-NNuWA34REyd2fJlNyMx06Xjpjz4Zyo1IZvrvOFJnbKDP_R7C0Rw5q4IgtT9KHZKMzOUeW5XjVNSxF9E3cZXMbGO2bRSxajO1xU4')`
+                  }}
+                ></div>
+                <div className="absolute top-6 right-6 md:top-10 md:right-10 flex gap-2">
+                  <span className="bg-primary-container text-on-primary-container px-3 py-1 text-[10px] md:text-xs font-bold tracking-widest uppercase rounded">Featured</span>
+                  <span className="bg-surface-container-highest/80 backdrop-blur text-white px-3 py-1 text-[10px] md:text-xs font-bold tracking-widest uppercase rounded">March 24</span>
                 </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </Card>
+                <div className="relative z-10 max-w-2xl">
+                  <h1 className="font-headline text-3xl md:text-5xl font-bold leading-tight mb-4 tracking-tighter">
+                    CODE THE FUTURE: <span className="text-primary">GENESIS HACK</span>
+                  </h1>
+                  <p className="text-on-surface-variant text-sm md:text-lg leading-relaxed mb-8 font-body">
+                    Build the next generation of decentralized infrastructure. $50,000 prize pool, world-class mentors, and exclusive NFT rewards for top contributors.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button className="bg-primary-container text-on-primary-container font-bold px-8 py-3 rounded hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all">Register Now</button>
+                    <button className="bg-surface-container-highest text-on-surface font-bold px-8 py-3 rounded border border-outline-variant hover:bg-surface-bright transition-all">View Details</button>
+                  </div>
+                </div>
+              </section>
 
-        {/* COL 2: Problem Content (Middle) */}
-        <Card className={`col-span-5 ${THEME.card} flex flex-col overflow-hidden h-full rounded-xl border-white/10 shadow-2xl`}>
-          {/* Problem Header */}
-          <div className="px-5 py-4 border-b border-white/10 bg-white/5 flex justify-between items-start">
-            <div>
-              <h2 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
-                {selectedProblem.title}
-              </h2>
-              <div className="flex items-center gap-3 text-xs text-slate-400">
-                <span className={cn(
-                  "px-2 py-0.5 rounded text-[10px] font-bold border",
-                  selectedProblem.difficulty === 'Easy' ? "border-green-500/30 text-green-400 bg-green-500/10" :
-                    selectedProblem.difficulty === 'Medium' ? "border-yellow-500/30 text-yellow-400 bg-yellow-500/10" :
-                      "border-red-500/30 text-red-400 bg-red-500/10"
-                )}>
-                  {selectedProblem.difficulty}
-                </span>
-                <span>•</span>
-                <span>Time: 1s</span>
-                <span>•</span>
-                <span>Memory: 256MB</span>
-              </div>
-            </div>
-          </div>
+              {/* Contest Controls */}
+              <section className="flex flex-col gap-6">
+                <div className="flex flex-col md:flex-row justify-between border-b border-outline-variant/30 pb-2 gap-4 md:items-end">
+                  <div className="flex gap-4 md:gap-8 overflow-x-auto w-full md:w-auto scrollbar-hide">
+                    {['ACTIVE CONTESTS', 'UPCOMING', 'PAST RESULTS'].map((tab) => (
+                      <button 
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`pb-4 border-b-2 font-bold text-xs md:text-sm tracking-wide whitespace-nowrap transition-colors ${
+                          activeTab === tab 
+                            ? 'border-primary text-primary' 
+                            : 'border-transparent text-outline hover:text-on-surface'
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2 pb-2 md:pb-4 whitespace-nowrap self-start md:self-auto">
+                    <span className="text-xs text-outline font-mono">SORT BY:</span>
+                    <button className="text-xs font-bold flex items-center gap-1">
+                      PRIZE POOL <span className="material-symbols-outlined text-[14px]">expand_more</span>
+                    </button>
+                  </div>
+                </div>
 
-          {/* Problem Tabs */}
-          <div className="flex items-center gap-1 px-4 border-b border-white/10 bg-slate-900/20">
-            {['description', 'input', 'output', 'examples'].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={cn(
-                  "px-4 py-2 text-xs font-medium border-b-2 transition-all capitalize",
-                  activeTab === tab
-                    ? "border-blue-500 text-blue-400 sticky top-0 bg-white/5"
-                    : "border-transparent text-slate-500 hover:text-slate-300"
-                )}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          {/* Problem Body */}
-          <ScrollArea className="flex-1 p-5">
-            {activeTab === 'description' && (
-              <div className="prose prose-invert prose-sm max-w-none">
-                <p className="text-slate-300 leading-relaxed text-sm">
-                  {selectedProblem.description}
-                </p>
-
-                <div className="mt-8 space-y-6">
-                  {(selectedProblem.examples || [{ input: selectedProblem.sampleInput, output: selectedProblem.sampleOutput }]).map((example, idx) => (
-                    <div key={idx}>
-                      <h3 className="text-sm font-bold text-white mb-2">Example {idx + 1}:</h3>
-                      <div className="bg-slate-900/50 rounded-lg border border-white/10 overflow-hidden">
-                        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
-                          <div className="p-3">
-                            <div className="text-[10px] uppercase text-slate-500 font-bold mb-1.5 flex items-center gap-1">
-                              <ArrowLeft className="w-3 h-3 rotate-180" /> Input
-                            </div>
-                            <code className="text-xs text-slate-300 font-mono whitespace-pre block bg-black/20 p-2 rounded border border-white/5">
-                              {example.input}
-                            </code>
-                          </div>
-                          <div className="p-3">
-                            <div className="text-[10px] uppercase text-slate-500 font-bold mb-1.5 flex items-center gap-1">
-                              <ArrowLeft className="w-3 h-3" /> Output
-                            </div>
-                            <code className="text-xs text-slate-300 font-mono whitespace-pre block bg-black/20 p-2 rounded border border-white/5">
-                              {example.output}
-                            </code>
+                {/* Grid of Contests */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {/* Contest Card 1 */}
+                  <div className="bg-surface-container-low border border-outline-variant/10 rounded-lg p-6 hover:bg-surface-container transition-all group flex flex-col justify-between h-full min-h-[320px]">
+                    <div>
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="bg-primary/10 text-primary px-2 py-1 rounded text-[10px] font-bold tracking-widest uppercase">Live Now</div>
+                        <div className="text-outline text-xs font-mono">ID: #C-1092</div>
+                      </div>
+                      <h3 className="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors">Neural Net Optimization</h3>
+                      <p className="text-on-surface-variant text-sm mb-6 line-clamp-2">Optimize latency for large-scale language models in constrained hardware environments.</p>
+                      
+                      <div className="space-y-3 mb-8">
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-outline text-lg">calendar_today</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Starts</span>
+                            <span className="text-sm font-medium">Started 2h ago</span>
                           </div>
                         </div>
-                        {example.explanation && (
-                          <div className="p-3 border-t border-white/10 bg-white/5">
-                            <span className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Explanation</span>
-                            <p className="text-xs text-slate-400 leading-relaxed">{example.explanation}</p>
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-outline text-lg">schedule</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Duration</span>
+                            <span className="text-sm font-medium">48 Hours</span>
                           </div>
-                        )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-primary text-lg">payments</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Prize Pool</span>
+                            <span className="text-sm font-bold text-primary">$12,000 USD</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 p-4 rounded-lg bg-blue-900/20 border border-blue-500/20">
-                  <h4 className="text-blue-400 text-xs font-bold uppercase mb-2 flex items-center gap-2">
-                    <Sparkles className="w-3 h-3" /> Note
-                  </h4>
-                  <p className="text-blue-200/80 text-xs">
-                    Make sure to handle edge cases where the input array might be empty.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'input' && (
-              <div className="space-y-4">
-                <div className="bg-slate-900/50 rounded-lg border border-white/10 overflow-hidden">
-                  <div className="px-3 py-2 bg-white/5 border-b border-white/10 text-xs font-mono text-slate-400 flex items-center gap-2">
-                    <ArrowLeft className="w-3 h-3 rotate-180" /> Input Format
+                    <button className="w-full bg-surface-container-highest text-on-surface font-bold py-3 rounded hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 mt-auto">
+                      Join Contest <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
                   </div>
-                  <div className="p-3 font-mono text-sm text-slate-300 whitespace-pre-line">
-                    {selectedProblem.inputFormat}
-                  </div>
-                </div>
-              </div>
-            )}
 
-            {activeTab === 'output' && (
-              <div className="space-y-4">
-                <div className="bg-slate-900/50 rounded-lg border border-white/10 overflow-hidden">
-                  <div className="px-3 py-2 bg-white/5 border-b border-white/10 text-xs font-mono text-slate-400 flex items-center gap-2">
-                    <ArrowLeft className="w-3 h-3" /> Output Format
-                  </div>
-                  <div className="p-3 font-mono text-sm text-slate-300 whitespace-pre-line">
-                    {selectedProblem.outputFormat}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'examples' && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="bg-slate-900/50 rounded-lg border border-white/10">
-                    <div className="px-3 py-2 bg-white/5 border-b border-white/10 text-xs font-bold text-slate-400">Sample 1:</div>
-                    <div className="grid grid-cols-2 divide-x divide-white/10">
-                      <div className="p-3">
-                        <span className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Input</span>
-                        <code className="text-xs text-green-400 font-mono whitespace-pre">{selectedProblem.sampleInput}</code>
+                  {/* Contest Card 2 */}
+                  <div className="bg-surface-container-low border border-outline-variant/10 rounded-lg p-6 hover:bg-surface-container transition-all group flex flex-col justify-between h-full min-h-[320px]">
+                    <div>
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold tracking-widest uppercase">System Design</div>
+                        <div className="text-outline text-xs font-mono">ID: #C-1095</div>
                       </div>
-                      <div className="p-3">
-                        <span className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Output</span>
-                        <code className="text-xs text-blue-400 font-mono whitespace-pre">{selectedProblem.sampleOutput}</code>
+                      <h3 className="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors">Distributed Cache Engine</h3>
+                      <p className="text-on-surface-variant text-sm mb-6 line-clamp-2">Design and implement a zero-copy distributed cache with high consistency guarantees.</p>
+                      
+                      <div className="space-y-3 mb-8">
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-outline text-lg">calendar_today</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Starts</span>
+                            <span className="text-sm font-medium">Tomorrow, 10:00 AM</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-outline text-lg">schedule</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Duration</span>
+                            <span className="text-sm font-medium">3 Hours</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-primary text-lg">payments</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Prize Pool</span>
+                            <span className="text-sm font-bold text-primary">$5,000 USD</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
+                    <button className="w-full bg-surface-container-highest text-on-surface font-bold py-3 rounded hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 mt-auto">
+                      Pre-Register <span className="material-symbols-outlined text-sm">notifications_active</span>
+                    </button>
+                  </div>
+
+                  {/* Contest Card 3 */}
+                  <div className="bg-surface-container-low border border-outline-variant/10 rounded-lg p-6 hover:bg-surface-container transition-all group flex flex-col justify-between h-full min-h-[320px]">
+                    <div>
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="bg-primary/10 text-primary px-2 py-1 rounded text-[10px] font-bold tracking-widest uppercase">Algorithms</div>
+                        <div className="text-outline text-xs font-mono">ID: #C-1102</div>
+                      </div>
+                      <h3 className="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors">Obsidian Sprint 08</h3>
+                      <p className="text-on-surface-variant text-sm mb-6 line-clamp-2">A weekly high-speed competitive programming round featuring 5 problems.</p>
+                      
+                      <div className="space-y-3 mb-8">
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-outline text-lg">calendar_today</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Starts</span>
+                            <span className="text-sm font-medium">March 15, 18:00</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-outline text-lg">schedule</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Duration</span>
+                            <span className="text-sm font-medium">90 Minutes</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-primary text-lg">payments</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Prize Pool</span>
+                            <span className="text-sm font-bold text-primary">Points + $1k</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button className="w-full bg-surface-container-highest text-on-surface font-bold py-3 rounded hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 mt-auto">
+                      Join Sprint <span className="material-symbols-outlined text-sm">bolt</span>
+                    </button>
                   </div>
                 </div>
-              </div>
-            )}
-          </ScrollArea>
-        </Card>
-
-        {/* COL 3: Code Editor (Right) */}
-        <div className="col-span-5 flex flex-col gap-4 h-full">
-          <Card className={`flex-1 ${THEME.card} flex flex-col overflow-hidden rounded-xl border-white/10 shadow-2xl relative`}>
-            {/* Editor renders here - wrapping Simplified Editor or AdvancedCodeEditor */}
-            {/* Note: In a real implementation we would strip AdvancedCodeEditor to be purely the editor part */}
-            {/* For this demo, we'll wrap the existing one but force styles via CSS/Props if possible, or just use a container */}
-
-            <div className="h-full bg-[#1e1e1e]">
-              <AdvancedCodeEditor
-                problemId={selectedProblem.id}
-                defaultLanguage="python"
-                height="100%"
-              />
+              </section>
             </div>
-          </Card>
-
-          {/* Bottom Console / Output */}
-          {/* The user requested this spanning the bottom or in the column. 
-                With 3-col layout, putting it below Editor (Column 3) is Vertical Split.
-                Putting it below ALL columns is Horizontal Split.
-                The diagram:
-                | List | Prob | Code |
-                | Output-------------|
-            */}
+          </main>
+          
+          {/* Sticky Footer CTA */}
+          <footer className="mt-auto border-t border-outline-variant/10 py-6 px-4 md:px-10 flex flex-col sm:flex-row items-center justify-between bg-surface-container-high/60 backdrop-blur-[20px] gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse w-shrink-0"></div>
+              <p className="text-[10px] md:text-xs font-mono text-outline">CURRENTLY 12,482 DEVELOPERS ONLINE</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 md:gap-10">
+              <a className="text-[10px] md:text-xs font-bold text-outline hover:text-on-surface transition-colors" href="#">API DOCS</a>
+              <a className="text-[10px] md:text-xs font-bold text-outline hover:text-on-surface transition-colors" href="#">GUIDELINES</a>
+              <a className="text-[10px] md:text-xs font-bold text-outline hover:text-on-surface transition-colors" href="#">SUPPORT</a>
+            </div>
+          </footer>
         </div>
-
-        {/* Bottom Console Panel (Spanning Rows) - Adjusting grid to make this row 2 */}
-        <Card className={`col-span-12 ${THEME.card} mt-4 rounded-xl border-white/10 shadow-2xl overflow-hidden flex flex-col transition-all ${isConsoleOpen ? 'h-48' : 'h-10'}`}>
-          <div
-            onClick={() => setIsConsoleOpen(!isConsoleOpen)}
-            className="h-10 px-4 flex items-center justify-between cursor-pointer bg-white/5 hover:bg-white/10 transition-colors border-b border-white/10"
-          >
-            <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-slate-400" />
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Console / Test Results</span>
-            </div>
-            <ChevronRight className={`w-4 h-4 text-slate-500 transition-transform ${isConsoleOpen ? 'rotate-90' : ''}`} />
-          </div>
-
-          {isConsoleOpen && (
-            <div className="flex-1 p-0 flex">
-              <div className="w-48 border-r border-white/10 bg-slate-900/30 p-2 space-y-1">
-                <button className="w-full text-left px-3 py-2 rounded text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                  Test Case 1
-                </button>
-                <button className="w-full text-left px-3 py-2 rounded text-xs font-medium text-slate-500 hover:bg-white/5">
-                  Test Case 2
-                </button>
-              </div>
-              <div className="flex-1 p-4 font-mono text-sm">
-                <span className="text-slate-500">// Output will appear here</span>
-              </div>
-            </div>
-          )}
-        </Card>
-
-      </main>
+      </div>
     </div>
   );
 };
 
 export default Contests;
-

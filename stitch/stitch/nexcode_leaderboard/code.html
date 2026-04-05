@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NexCode Leaderboard | Obsidian Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#4edea3",
+                        "inverse-surface": "#e2e2e8",
+                        "on-tertiary-container": "#711419",
+                        "surface-container": "#1e2024",
+                        "on-surface": "#e2e2e8",
+                        "on-secondary": "#002e6a",
+                        "surface-container-low": "#1a1c20",
+                        "on-primary-container": "#00422b",
+                        "tertiary": "#ffb3af",
+                        "inverse-on-surface": "#2f3035",
+                        "on-secondary-container": "#e6ecff",
+                        "on-background": "#e2e2e8",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#ffdad7",
+                        "secondary-container": "#0566d9",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-primary": "#003824",
+                        "on-tertiary-fixed-variant": "#842225",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "outline-variant": "#3c4a42",
+                        "inverse-primary": "#006c49",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#37393e",
+                        "outline": "#86948a",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-primary-fixed": "#002113",
+                        "surface-variant": "#333539",
+                        "surface-container-lowest": "#0c0e12",
+                        "primary": "#4edea3",
+                        "on-tertiary-fixed": "#410005",
+                        "on-tertiary": "#650911",
+                        "surface": "#111318",
+                        "secondary": "#adc6ff",
+                        "on-primary-fixed-variant": "#005236",
+                        "surface-container-highest": "#333539",
+                        "primary-container": "#10b981",
+                        "on-error-container": "#ffdad6",
+                        "background": "#111318",
+                        "surface-container-high": "#282a2e",
+                        "primary-fixed": "#6ffbbe",
+                        "tertiary-container": "#fc7c78",
+                        "surface-dim": "#111318",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-surface-variant": "#bbcabf",
+                        "on-secondary-fixed": "#001a42"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["DM Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #111318;
+            background-image: radial-gradient(circle at 50% 0%, rgba(78, 222, 163, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface antialiased overflow-x-hidden">
+<div class="noise-overlay"></div>
+<!-- Top Navigation Shell -->
+<header class="bg-[#0c0e12]/80 backdrop-blur-md fixed top-0 z-50 w-full border-none">
+<nav class="flex items-center justify-between px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tighter text-emerald-500 font-headline">NexCode</span>
+<div class="hidden md:flex items-center gap-6 font-['Space_Grotesk'] font-medium tracking-tight">
+<a class="text-emerald-400 font-bold hover:text-emerald-300 transition-colors duration-200" href="#">Leaderboard</a>
+<a class="text-slate-400 hover:text-emerald-300 transition-colors duration-200" href="#">Contests</a>
+<a class="text-slate-400 hover:text-emerald-300 transition-colors duration-200" href="#">Pricing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 font-['Space_Grotesk'] font-medium hover:text-emerald-300 transition-colors duration-200 active:scale-95 px-4 py-2">Log In</button>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 font-['Space_Grotesk'] font-bold tracking-tight rounded-sm hover:shadow-[0_0_15px_rgba(78,222,163,0.3)] transition-all active:scale-95">Sign Up</button>
+</div>
+</nav>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-12 max-w-screen-xl mx-auto min-h-screen">
+<!-- Hero Title Section -->
+<section class="mb-12 relative">
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px]"></div>
+<h1 class="font-headline text-5xl md:text-6xl font-black tracking-tighter mb-4 text-on-surface">THE <span class="text-primary">ELITE</span> ROSTER.</h1>
+<p class="text-on-surface-variant max-w-xl font-body leading-relaxed">The Obsidian Architect leaderboard showcases the top 0.1% of technical minds. Precision, speed, and architectural integrity define the ranks.</p>
+</section>
+<!-- Stats Bento Overview (Asymmetric) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="md:col-span-2 bg-surface-container-low p-8 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="terminal">terminal</span>
+</div>
+<div class="relative z-10">
+<p class="font-mono text-xs uppercase tracking-[0.2em] text-primary/60 mb-2">Platform Total</p>
+<h3 class="font-headline text-4xl font-bold mb-4">1,402,291</h3>
+<p class="text-sm text-on-surface-variant">Active deployments verified in the last 24 hours.</p>
+</div>
+</div>
+<div class="bg-surface-container-high p-8 flex flex-col justify-end">
+<p class="font-mono text-xs uppercase tracking-[0.2em] text-secondary mb-2">Success Rate</p>
+<h3 class="font-headline text-3xl font-bold">98.4%</h3>
+</div>
+<div class="bg-surface-container p-8 flex flex-col justify-end border-l border-primary/20">
+<p class="font-mono text-xs uppercase tracking-[0.2em] text-primary mb-2">Next Reset</p>
+<h3 class="font-headline text-3xl font-bold">04:12:55</h3>
+</div>
+</div>
+<!-- Leaderboard Main Container -->
+<div class="bg-surface-container-lowest overflow-hidden shadow-2xl">
+<!-- Tabs Navigation -->
+<div class="flex items-center border-b border-outline-variant/15 px-6 pt-6">
+<button class="px-6 py-4 border-b-2 border-primary text-primary font-mono text-xs uppercase tracking-widest transition-all">Daily</button>
+<button class="px-6 py-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-mono text-xs uppercase tracking-widest transition-all">Weekly</button>
+<button class="px-6 py-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-mono text-xs uppercase tracking-widest transition-all">All-Time</button>
+<div class="ml-auto flex items-center gap-4 hidden md:flex">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-sm" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none focus:ring-1 focus:ring-primary pl-10 pr-4 py-2 text-xs font-mono w-64 placeholder:text-outline/50" placeholder="Filter developers..." type="text"/>
+</div>
+</div>
+</div>
+<!-- Leaderboard Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr class="font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant/70">
+<th class="px-8 py-5 font-medium">Rank</th>
+<th class="px-8 py-5 font-medium">Developer</th>
+<th class="px-8 py-5 font-medium">Points</th>
+<th class="px-8 py-5 font-medium text-center">Solved</th>
+<th class="px-8 py-5 font-medium text-right">Success Rate</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Rank 1 -->
+<tr class="group hover:bg-surface-container-high transition-colors">
+<td class="px-8 py-6">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary font-headline font-black text-sm">01</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male developer with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCav800Hvddts_wm4gAhBCInfxTHfPjsMwQQKGg0vBLnBnZlo9m-Blcv6tcwyo1JNGlN6cF5iFTIltnN_1iX_JwCadDvW5ydmxR952dFlX3GmkPVzTStDfYXd4bICcNTPjWtt1-5RPA7Q_dLKGUEOcXCogjtb8A6N_UZ5qQMCiYNGR8UjZOrSk2LZKV68NAnnJqaFN5IC5l7IHkDYnrWLTN1WDH3-ZoK4q_oUWA4bfTbH-iJVstGeeevDhf_GxYmFzOO56uzgaK7Sc"/>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface leading-none mb-1">cipher_ghost</p>
+<p class="font-mono text-[10px] text-primary/60 uppercase">Lvl 99 Architect</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 font-mono text-sm font-bold text-on-surface">12,840</td>
+<td class="px-8 py-6 text-center font-mono text-sm">492</td>
+<td class="px-8 py-6 text-right">
+<span class="px-2 py-1 bg-primary/10 text-primary font-mono text-xs rounded-sm">99.8%</span>
+</td>
+</tr>
+<!-- Rank 2 -->
+<tr class="group hover:bg-surface-container-high transition-colors">
+<td class="px-8 py-6">
+<span class="flex items-center justify-center w-8 h-8 rounded-full text-on-surface-variant font-headline font-black text-sm">02</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female developer with blue hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjWBbMhJnviQtZFWWcUgpGAwdFV5-rtdSz2P5WiNHJYLfCkZ97B9HSCSMDaemZiCAskYHpDnXy3d-JcAPkzphLFAu2wDSk_so9vLqr_-M7U891V749pY291Djz-RE_hXKS32jA9nXdPHS_GgL4tv5HDYrQPbhORsOEmKDEfXWxpkoSyTRgTHpd5I_n2VUeHiL8ZY_yHpqJDiUEWYv3UmpeqpZpmdBr-hiJcWYhB_L4mIOonTiI3Zty0ohCHJK8WQgfDrT8_bHAOZc"/>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface leading-none mb-1">null_pointer_queen</p>
+<p class="font-mono text-[10px] text-secondary uppercase">Lead Engineer</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 font-mono text-sm font-bold text-on-surface">11,902</td>
+<td class="px-8 py-6 text-center font-mono text-sm">481</td>
+<td class="px-8 py-6 text-right">
+<span class="px-2 py-1 bg-secondary/10 text-secondary font-mono text-xs rounded-sm">97.2%</span>
+</td>
+</tr>
+<!-- Rank 3 -->
+<tr class="group hover:bg-surface-container-high transition-colors">
+<td class="px-8 py-6">
+<span class="flex items-center justify-center w-8 h-8 rounded-full text-on-surface-variant font-headline font-black text-sm">03</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a smiling male developer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsh25phUpQ4tcsCe5ZiHAR-VTp7yU0lmr725kDfLXAXZ9juHnhbLglb_TiFermeqRXo2I8LaQXrjCdvAqpiJp1cs81U99pkTs7cNuSIT4A3okMuEjimdxwpBE0_5EB-v1eycACZ450MjX5G4Olkx_t0N8RhiKzmdd85ZwdxK_vPXJwbY4tzl60Razy-tRk_ZeYwObnJxeeQW02bUP5vqejLd_M_qPE0TXayE5RYUsGo5nrcYMSbSvJ-AVsrhox9n-STAlnMdXiv5g"/>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface leading-none mb-1">binary_bard</p>
+<p class="font-mono text-[10px] text-on-surface-variant uppercase">Senior Dev</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 font-mono text-sm font-bold text-on-surface">11,450</td>
+<td class="px-8 py-6 text-center font-mono text-sm">465</td>
+<td class="px-8 py-6 text-right">
+<span class="px-2 py-1 bg-surface-container-highest text-on-surface-variant font-mono text-xs rounded-sm">96.5%</span>
+</td>
+</tr>
+<!-- Rank 4 -->
+<tr class="group hover:bg-surface-container-high transition-colors">
+<td class="px-8 py-6">
+<span class="flex items-center justify-center w-8 h-8 rounded-full text-on-surface-variant font-headline font-black text-sm">04</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-sm overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female developer with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2L5SzyZn_IamgbSeTOqkKdCnGQlFhGJsgX1nSJofnzOocyLlgK-eDr21aF799LY9fhwtjm93WtLKiu2bPzcjbMcy52Sm8F5KjBfw8-AkkGoMPox3mlvzBeKf-rcoRfobU2AGS2cMpF6JiZaP1aOJ1-vbqQFf6oempRB1dJG2U8G2LE1td7YuK2IZMH_RHMSoewieaOxA5fa-OKeFOb0WkMX2-WClOz2AqRZ26J005CfVmHFshdT-P6iCRyNqRG1FcB-iHLnCNrlQ"/>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface leading-none mb-1">lambda_flow</p>
+<p class="font-mono text-[10px] text-on-surface-variant uppercase">System Architect</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 font-mono text-sm font-bold text-on-surface">10,891</td>
+<td class="px-8 py-6 text-center font-mono text-sm">442</td>
+<td class="px-8 py-6 text-right">
+<span class="px-2 py-1 bg-surface-container-highest text-on-surface-variant font-mono text-xs rounded-sm">94.8%</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Highlighted User Position (Floating Bottom Anchor) -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-screen-xl z-40">
+<div class="bg-primary/10 border border-primary/20 backdrop-blur-xl p-4 flex items-center justify-between shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<span class="font-mono text-primary font-black">#842</span>
+<div class="w-8 h-8 rounded-sm bg-primary/20 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmiXGN2J6KwtgpRGnIjUJhCcXUNX2vsN6CQLwvZJxuwAvEx9MEPPX-EnHJUSgpj_8kRjOh5Fre9Bpcmaqsm7XUivzc6_qJDWJbXCYssNVwnglYI73z4ZNxgdmhuhj3LQlHD9CGH3KdlQ6hpQB5dS5K4cHpeGgsFeE3_nhvvIFuXn4gYISDn7avITJwdp8LpbliXPlvM0n_xX7DiHH5sWprFT9O8dmQNUIH029Ew_hqJaNKLX55RrQ2K652X3C7j80RCXJIXydX6wU"/>
+</div>
+<span class="font-headline font-bold text-on-surface">You (The Architect)</span>
+</div>
+<div class="hidden md:flex gap-6 items-center border-l border-primary/20 pl-8">
+<div>
+<p class="text-[10px] uppercase font-mono text-primary/60">Current Pts</p>
+<p class="text-sm font-bold">4,102</p>
+</div>
+<div>
+<p class="text-[10px] uppercase font-mono text-primary/60">Solved</p>
+<p class="text-sm font-bold">128</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<p class="text-xs font-mono text-on-surface-variant hidden lg:block">Top 12% globally</p>
+<button class="bg-primary text-on-primary px-4 py-1.5 text-xs font-headline font-black uppercase tracking-tighter rounded-sm hover:brightness-110 active:scale-95 transition-all">
+                        View Stats
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="bg-[#0c0e12] w-full border-t border-[#333539] flex flex-col md:flex-row justify-between items-center px-12 py-8 mt-auto">
+<div class="flex flex-col items-center md:items-start gap-4">
+<span class="text-lg font-bold text-emerald-500 font-headline tracking-tighter">NexCode</span>
+<p class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest text-slate-500">© 2024 NexCode. Precision engineered for the Obsidian Architect.</p>
+</div>
+<div class="flex gap-8 mt-6 md:mt-0">
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Documentation</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Terms of Service</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Contact Support</a>
+</div>
+</footer>
+<!-- Decorative Elements -->
+<div class="fixed top-0 right-0 w-1/3 h-screen pointer-events-none z-[-1] overflow-hidden">
+<div class="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]"></div>
+</div>
+</body></html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NexCode - Sign In</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&amp;family=Manrope:wght@300;400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#4edea3",
+              "inverse-surface": "#e2e2e8",
+              "on-tertiary-container": "#711419",
+              "surface-container": "#1e2024",
+              "on-surface": "#e2e2e8",
+              "on-secondary": "#002e6a",
+              "surface-container-low": "#1a1c20",
+              "on-primary-container": "#00422b",
+              "tertiary": "#ffb3af",
+              "inverse-on-surface": "#2f3035",
+              "on-secondary-container": "#e6ecff",
+              "on-background": "#e2e2e8",
+              "on-error": "#690005",
+              "tertiary-fixed": "#ffdad7",
+              "secondary-container": "#0566d9",
+              "tertiary-fixed-dim": "#ffb3af",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary": "#003824",
+              "on-tertiary-fixed-variant": "#842225",
+              "secondary-fixed-dim": "#adc6ff",
+              "outline-variant": "#3c4a42",
+              "inverse-primary": "#006c49",
+              "error-container": "#93000a",
+              "error": "#ffb4ab",
+              "surface-bright": "#37393e",
+              "outline": "#86948a",
+              "on-secondary-fixed-variant": "#004395",
+              "on-primary-fixed": "#002113",
+              "surface-variant": "#333539",
+              "surface-container-lowest": "#0c0e12",
+              "primary": "#4edea3",
+              "on-tertiary-fixed": "#410005",
+              "on-tertiary": "#650911",
+              "surface": "#111318",
+              "secondary": "#adc6ff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-container-highest": "#333539",
+              "primary-container": "#10b981",
+              "on-error-container": "#ffdad6",
+              "background": "#111318",
+              "surface-container-high": "#282a2e",
+              "primary-fixed": "#6ffbbe",
+              "tertiary-container": "#fc7c78",
+              "surface-dim": "#111318",
+              "secondary-fixed": "#d8e2ff",
+              "on-surface-variant": "#bbcabf",
+              "on-secondary-fixed": "#001a42"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>.noise-overlay {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDhFzAVpnFzp-CwGmD-n467e-YmrqhV14h_QMW3bHYu2fUgr9HCzBIo63sDgrnCX_ZAwBeaq62hbvVowdvvrDVlRpNpBSdgfla02VBpaW3aVz3Vbc7NbonOY-GMNnfAc6rW8qS4TsJH0Q5NOfB6Oyhfspb-AJ02AjE_wQOiGlEnjfvrNzLaLi8H8NZlHEjlDOmWqW_I93kwWOLiaYSfaIjnXW6TWBIqQS3sH3OpKfEy-u7zXEuonSjh_Brkr-90Wn6CZRl6HVK-yiY);
+    opacity: 0.03;
+    pointer-events: none
+    }
+.emerald-glow {
+    background: radial-gradient(circle at center, rgba(78, 222, 163, 0.1) 0%, rgba(12, 14, 18, 0) 70%)
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }</style>
+</head>
+<body class="bg-surface-container-lowest font-body text-on-surface selection:bg-primary/30 min-h-screen relative flex flex-col overflow-x-hidden">
+<!-- Grain Texture Overlay -->
+<div class="fixed inset-0 noise-overlay z-[100]"></div>
+<!-- Hero Background Glow -->
+<div class="fixed inset-0 emerald-glow z-0"></div>
+<!-- Main Content -->
+<main class="flex-grow flex items-center justify-center px-6 py-12 z-10">
+<div class="w-full max-w-[440px] relative">
+<!-- Branding Anchor -->
+<div class="mb-10 text-center">
+<div class="inline-flex items-center justify-center p-3 mb-4 rounded-lg bg-surface-container border border-outline-variant/20 shadow-xl">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="terminal">terminal</span>
+</div>
+<h1 class="font-headline font-black tracking-tighter text-4xl text-on-surface uppercase">NexCode</h1>
+<p class="font-label text-xs uppercase tracking-[0.2em] text-outline mt-2">The Obsidian Architect</p>
+</div>
+<!-- Login Card -->
+<div class="bg-surface-container border border-outline-variant/10 shadow-2xl relative overflow-hidden group">
+<!-- Subtle Top Accent -->
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
+<div class="p-8 md:p-10">
+<form class="space-y-6">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block font-headline text-sm font-semibold tracking-wide text-on-surface-variant" for="email">Email</label>
+<div class="relative group/field">
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 text-on-surface px-0 py-3 focus:ring-0 focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-outline/40" id="email" placeholder="architect@nexcode.io" type="email"/>
+<div class="absolute bottom-0 left-0 h-[2px] w-0 bg-primary group-focus-within/field:w-full transition-all duration-500 shadow-[0_0_15px_rgba(78,222,163,0.5)]"></div>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="block font-headline text-sm font-semibold tracking-wide text-on-surface-variant" for="password">Password</label>
+<a class="text-xs font-medium text-primary hover:text-primary-fixed-dim transition-colors" href="#">Forgot Password?</a>
+</div>
+<div class="relative group/field">
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 text-on-surface px-0 py-3 focus:ring-0 focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-outline/40" id="password" placeholder="••••••••" type="password"/>
+<div class="absolute bottom-0 left-0 h-[2px] w-0 bg-primary group-focus-within/field:w-full transition-all duration-500 shadow-[0_0_15px_rgba(78,222,163,0.5)]"></div>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-on-primary font-headline font-bold py-4 mt-4 hover:shadow-[0_0_30px_rgba(78,222,163,0.3)] active:scale-[0.98] transition-all duration-200 uppercase tracking-widest text-sm" type="submit">
+                            Sign In
+                        </button>
+</form>
+<!-- Divider -->
+<div class="relative my-10 flex items-center">
+<div class="flex-grow border-t border-outline-variant/15"></div>
+<span class="flex-shrink mx-4 text-[10px] font-bold text-outline uppercase tracking-widest">Or Continue With</span>
+<div class="flex-grow border-t border-outline-variant/15"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-highest border border-outline-variant/10 hover:bg-surface-bright transition-colors duration-200">
+<img alt="" class="w-5 h-5 invert" data-alt="GitHub logo icon white variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKNH9aIBBHOxU0mrHEi3Eh5ChUt_WeypRT2lxbxzsl01AoS6vxgf5b3MO-ud9i51cKjQi-W0-ObkOOt7sTN31YTkHdYyxJLg057mHqPKyAm23NWDjGJzSNikHjlwtKrClXIUK4EAQX9DXicsewP1Tm6webKRE08Cs9zndn2bdWt4QnG5gyxxDs17RiI5Eg8uAfRRuygJ14GM3XDJUH8KfiK1URupaa9sfvX8u_rtXu2KtVcZS_UCn3GP7Y80yicuTBjVI0zRUH_NE"/>
+<span class="text-xs font-headline font-semibold uppercase tracking-tight">GitHub</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-highest border border-outline-variant/10 hover:bg-surface-bright transition-colors duration-200">
+<img alt="" class="w-4 h-4" data-alt="Google colorful brand logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-Y1yq3F9QHKrbeorhDWSWOu9CWkbNSAiynMTIU_89cHZ47gdK0XnFdwM3FE-EVSJv-BtIFkiK938yqYsrYMG1Nd1oZc7pWvwQJNQ3qHzHe8vveXysHgOJHNvhoqQ3vX892QqYBjUj482xISxlwTjhT8k8usZaC1KiKUAJCaxtNXN7LS3a5FGD28iM5Hr0gpFgFDZFcndRdZ3W6E_kbJNdwUnmFzxPBvF33gJKQUqsLu4OeyqtqvtNQ-uiG3G9Eal9NmUkf5fzihU"/>
+<span class="text-xs font-headline font-semibold uppercase tracking-tight">Google</span>
+</button>
+</div>
+</div>
+<!-- Footer Link inside Card -->
+<div class="bg-surface-container-high/30 py-6 px-10 text-center border-t border-outline-variant/10">
+<p class="text-sm text-on-surface-variant font-medium">
+                        New to the terminal? <a class="text-primary hover:underline font-bold transition-all ml-1" href="#">Sign Up</a>
+</p>
+</div>
+</div>
+<!-- Technical Metadata Footer -->
+<div class="mt-12 flex justify-between items-center opacity-40">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+<span class="font-mono text-[10px] uppercase tracking-tighter">System: Stable</span>
+</div>
+<span class="font-mono text-[10px] uppercase tracking-tighter">v4.2.0-LTS</span>
+</div>
+</div>
+</main>
+<!-- Global Footer -->
+<footer class="z-10 flex flex-col md:flex-row justify-between items-center px-12 py-8 w-full border-t border-[#333539] bg-[#0c0e12]">
+<div class="mb-4 md:mb-0">
+<span class="font-headline text-lg font-bold text-emerald-500">NexCode</span>
+</div>
+<div class="flex flex-col items-center gap-4">
+<p class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500">© 2024 NexCode. Precision engineered for the Obsidian Architect.</p>
+<div class="flex gap-6">
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Documentation</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Terms of Service</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>

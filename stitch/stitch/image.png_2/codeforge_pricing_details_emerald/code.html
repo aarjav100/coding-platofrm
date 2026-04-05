@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pricing | CodeForge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=DM+Sans:wght@400;500;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#f1f5f9",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#10b981",
+                        "inverse-surface": "#f8fafc",
+                        "tertiary": "#3b82f6",
+                        "surface-container-low": "#0f172a",
+                        "tertiary-fixed": "#3b82f6",
+                        "secondary-container": "#1e293b",
+                        "tertiary-fixed-dim": "#3b82f6",
+                        "on-secondary-container": "#cbd5e1",
+                        "on-background": "#f1f5f9",
+                        "secondary-fixed-dim": "#64748b",
+                        "primary-fixed-dim": "#10b981",
+                        "surface-variant": "#1e293b",
+                        "secondary-dim": "#3b82f6",
+                        "on-secondary-fixed-variant": "#334155",
+                        "on-primary-fixed": "#064e3b",
+                        "outline-variant": "#334155",
+                        "inverse-primary": "#059669",
+                        "error-dim": "#ef4444",
+                        "secondary": "#3b82f6",
+                        "on-tertiary-fixed": "#1e3a8a",
+                        "surface-container-high": "#1e293b",
+                        "primary-dim": "#10b981",
+                        "primary-fixed": "#10b981",
+                        "on-error-container": "#fecaca",
+                        "background": "#0a0c10",
+                        "on-primary-fixed-variant": "#065f46",
+                        "tertiary-container": "#1e3a8a",
+                        "surface-container": "#111827",
+                        "on-tertiary-container": "#dbeafe",
+                        "inverse-on-surface": "#475569",
+                        "on-primary-container": "#d1fae5",
+                        "on-error": "#450a0a",
+                        "tertiary-dim": "#3b82f6",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#1d4ed8",
+                        "outline": "#64748b",
+                        "error-container": "#991b1b",
+                        "error": "#ef4444",
+                        "surface-bright": "#1e293b",
+                        "surface": "#0a0c10",
+                        "primary": "#10b981",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#020617",
+                        "surface-container-highest": "#334155",
+                        "primary-container": "#065f46",
+                        "on-surface-variant": "#94a3b8",
+                        "on-secondary-fixed": "#0f172a",
+                        "secondary-fixed": "#cbd5e1",
+                        "surface-dim": "#0a0c10"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Mono"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px)
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+        }
+        .digital-noise {
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBblZ5RVLLhhVLIGHnMAOqTP5cMVQbmNjvPaA0v_iUWUXfLn7EQNx3P2tfMQgb7H8gcmBGRRr3Hnk78CM8iAC-BfGiFjguZaEyeuoFVKfybX8oXnA_LmMaedu4GpUhrqCvrdpQVW287FlA0hvg2g7YDWzyFTVy7gO1V2E7HXHRkAzu6UwbP_PdLuj7wEBHGWUASHtLERaB8YTPC_JIkKh8jd1ITywvPDT-OZltc2DbMyiMtB6xepLtTwOAv64PGXu_4CIjnUbkaJmQ);
+            opacity: 0.03;
+            pointer-events: none
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% -20%, rgba(16, 185, 129, 0.1) 0%, rgba(10, 12, 16, 0) 70%)
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary-container">
+<div class="fixed inset-0 digital-noise z-[100]"></div>
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-[#0a0c10]/80 backdrop-blur-xl shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex justify-between items-center px-8 h-20 w-full max-w-none border-b border-white/5">
+<div class="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#10b981] to-[#3b82f6]">CodeForge</div>
+<div class="hidden md:flex gap-8 items-center font-['Space_Grotesk'] font-bold tracking-tight">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Platform</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Docs</a>
+<a class="text-primary relative after:content-[''] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-primary after:rounded-full transition-colors duration-300" href="#">Pricing</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Enterprise</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Blog</a>
+</div>
+<div class="flex gap-6 items-center">
+<button class="text-on-surface-variant font-['Space_Grotesk'] font-bold hover:text-primary transition-colors">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-['Space_Grotesk'] font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)]">Sign Up</button>
+</div>
+</nav>
+<main class="pt-32 pb-24 hero-gradient">
+<!-- Hero Section -->
+<header class="max-w-7xl mx-auto px-8 text-center mb-24">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 mb-6">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-label text-primary uppercase tracking-widest">Pricing Architecture</span>
+</div>
+<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-none">
+                Scale your <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto]">vision.</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
+                Choose the command center that matches your ambition. From solo architects to global engineering teams.
+            </p>
+</header>
+<!-- Pricing Cards -->
+<section class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+<!-- Developer -->
+<div class="bg-surface-container-low rounded-xl p-10 border border-outline-variant/10 hover:border-primary/30 transition-all group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">person</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Developer</h3>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="text-4xl font-headline font-black">$19</span>
+<span class="text-on-surface-variant font-label text-sm">/mo</span>
+</div>
+<p class="text-on-surface-variant mb-8 text-sm leading-relaxed">Perfect for independent architects building the next frontier.</p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Unlimited Public Repos
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        5 Private Sandboxes
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        AI Autocomplete (Lite)
+                    </li>
+</ul>
+<button class="w-full py-4 rounded-lg border border-outline-variant text-on-surface font-headline font-bold hover:bg-surface-variant transition-all">Start Coding</button>
+</div>
+<!-- Team -->
+<div class="bg-surface-container-high rounded-xl p-10 border-2 border-primary relative overflow-hidden shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Most Popular</div>
+<div class="absolute top-0 right-0 p-6 opacity-10">
+<span class="material-symbols-outlined text-6xl">groups</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Team</h3>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="text-4xl font-headline font-black">$49</span>
+<span class="text-on-surface-variant font-label text-sm">/user /mo</span>
+</div>
+<p class="text-on-surface-variant mb-8 text-sm leading-relaxed">Collaborative environments for growing engineering squads.</p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Everything in Developer
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Unlimited Private Sandboxes
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Real-time Pair Programming
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Advanced Security Audits
+                    </li>
+</ul>
+<button class="w-full py-4 rounded-lg bg-primary text-on-primary font-headline font-bold hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">Deploy Team</button>
+</div>
+<!-- Enterprise -->
+<div class="bg-surface-container-low rounded-xl p-10 border border-outline-variant/10 hover:border-secondary/30 transition-all group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity text-secondary">
+<span class="material-symbols-outlined text-6xl">corporate_fare</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Enterprise</h3>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="text-4xl font-headline font-black">Custom</span>
+</div>
+<p class="text-on-surface-variant mb-8 text-sm leading-relaxed">Infinite scale, compliance, and bespoke infrastructure.</p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Everything in Team
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        SSO &amp; Custom Auth
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        On-Premise Deployment
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        24/7 Dedicated Support
+                    </li>
+</ul>
+<button class="w-full py-4 rounded-lg border border-secondary/40 text-secondary font-headline font-bold hover:bg-secondary/10 transition-all">Contact Sales</button>
+</div>
+</section>
+<!-- Feature Comparison Table -->
+<section class="max-w-7xl mx-auto px-8 mb-32">
+<h2 class="font-headline text-4xl font-extrabold mb-12 text-center">Feature Breakdown</h2>
+<div class="overflow-x-auto rounded-xl border border-outline-variant/10 bg-surface-container-low">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high border-b border-outline-variant/20 sticky top-20 z-10 backdrop-blur-md">
+<th class="p-6 font-headline font-bold uppercase tracking-widest text-xs text-on-surface-variant">Architecture</th>
+<th class="p-6 font-headline font-bold uppercase tracking-widest text-xs text-on-surface-variant">Developer</th>
+<th class="p-6 font-headline font-bold uppercase tracking-widest text-xs text-on-surface-variant">Team</th>
+<th class="p-6 font-headline font-bold uppercase tracking-widest text-xs text-on-surface-variant">Enterprise</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Group: Core Features -->
+<tr class="bg-surface-variant/20">
+<td class="p-4 px-6 text-[10px] font-label font-bold text-primary uppercase tracking-tighter" colspan="4">Core Systems</td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors group">
+<td class="p-6 text-sm font-medium">Cloud Workspace IDE</td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">Custom Syntax Highlighting</td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">AI Autocomplete</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">Basic</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">Advanced</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">Custom Models</td>
+</tr>
+<!-- Group: Collaboration -->
+<tr class="bg-surface-variant/20">
+<td class="p-4 px-6 text-[10px] font-label font-bold text-secondary uppercase tracking-tighter" colspan="4">Collaboration Labs</td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">Shared Environments</td>
+<td class="p-6"><span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">do_not_disturb_on</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">Live Terminal Sharing</td>
+<td class="p-6"><span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">do_not_disturb_on</span></td>
+<td class="p-6 text-on-surface-variant text-xs font-label">2 Users</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">Unlimited</td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">Team Knowledge Base</td>
+<td class="p-6"><span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">do_not_disturb_on</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<!-- Group: Infrastructure -->
+<tr class="bg-surface-variant/20">
+<td class="p-4 px-6 text-[10px] font-label font-bold text-primary uppercase tracking-tighter" colspan="4">Infrastructure &amp; Ops</td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">Max CPU Cores</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">2 Cores</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">8 Cores</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">Unlimited</td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">SLA Support</td>
+<td class="p-6"><span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">do_not_disturb_on</span></td>
+<td class="p-6"><span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">do_not_disturb_on</span></td>
+<td class="p-6 text-on-surface-variant text-xs font-label">99.9% Guaranteed</td>
+</tr>
+<tr class="hover:bg-surface-variant/40 transition-colors">
+<td class="p-6 text-sm font-medium">Deployment Target Connectors</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">3 Targets</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">Unlimited</td>
+<td class="p-6 text-on-surface-variant text-xs font-label">VPC Injection</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- FAQ Section -->
+<section class="max-w-4xl mx-auto px-8">
+<h2 class="font-headline text-4xl font-extrabold mb-12 text-center">Frequently Asked</h2>
+<div class="space-y-4">
+<div class="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+<button class="w-full flex justify-between items-center text-left group">
+<span class="font-headline font-bold text-lg">Can I switch plans mid-cycle?</span>
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="mt-4 text-on-surface-variant text-sm leading-relaxed">
+                        Yes, you can upgrade or downgrade at any time. Changes are prorated to your next billing cycle.
+                    </div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+<button class="w-full flex justify-between items-center text-left group">
+<span class="font-headline font-bold text-lg">What does "AI Lite" mean?</span>
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="mt-4 text-on-surface-variant text-sm leading-relaxed">
+                        AI Lite provides real-time syntax suggestions based on standard libraries. Advanced versions include deep contextual awareness and custom logic generation.
+                    </div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+<button class="w-full flex justify-between items-center text-left group">
+<span class="font-headline font-bold text-lg">Do you offer educational discounts?</span>
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="mt-4 text-on-surface-variant text-sm leading-relaxed">
+                        We provide CodeForge for free to students and verified academic institutions. Contact our education team.
+                    </div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+<button class="w-full flex justify-between items-center text-left group">
+<span class="font-headline font-bold text-lg">How is data security handled?</span>
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="mt-4 text-on-surface-variant text-sm leading-relaxed">
+                        All code is encrypted at rest (AES-256) and in transit (TLS 1.3). Enterprise plans offer dedicated instances for maximum isolation.
+                    </div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0a0c10] w-full py-12 px-8 mt-auto border-t border-[#1e293b] flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col gap-4">
+<div class="text-xl font-black text-primary">CodeForge</div>
+<p class="font-['DM_Sans'] text-sm tracking-normal text-on-surface-variant max-w-xs">
+                © 2024 CodeForge. All rights reserved. Built for the obsidian architect.
+            </p>
+</div>
+<div class="flex gap-8 items-center">
+<a class="font-['DM_Sans'] text-sm tracking-normal text-on-surface-variant hover:text-secondary hover:underline decoration-secondary transition-all" href="#">Privacy Policy</a>
+<a class="font-['DM_Sans'] text-sm tracking-normal text-on-surface-variant hover:text-secondary hover:underline decoration-secondary transition-all" href="#">Terms of Service</a>
+<a class="font-['DM_Sans'] text-sm tracking-normal text-on-surface-variant hover:text-secondary hover:underline decoration-secondary transition-all" href="#">Cookie Policy</a>
+<a class="font-['DM_Sans'] text-sm tracking-normal text-on-surface-variant hover:text-secondary hover:underline decoration-secondary transition-all" href="#">Security</a>
+</div>
+</footer>
+</body></html>

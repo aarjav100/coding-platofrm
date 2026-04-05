@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NexCode | Sign Up</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#4edea3",
+              "inverse-surface": "#e2e2e8",
+              "on-tertiary-container": "#711419",
+              "surface-container": "#1e2024",
+              "on-surface": "#e2e2e8",
+              "on-secondary": "#002e6a",
+              "surface-container-low": "#1a1c20",
+              "on-primary-container": "#00422b",
+              "tertiary": "#ffb3af",
+              "inverse-on-surface": "#2f3035",
+              "on-secondary-container": "#e6ecff",
+              "on-background": "#e2e2e8",
+              "on-error": "#690005",
+              "tertiary-fixed": "#ffdad7",
+              "secondary-container": "#0566d9",
+              "tertiary-fixed-dim": "#ffb3af",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary": "#003824",
+              "on-tertiary-fixed-variant": "#842225",
+              "secondary-fixed-dim": "#adc6ff",
+              "outline-variant": "#3c4a42",
+              "inverse-primary": "#006c49",
+              "error-container": "#93000a",
+              "error": "#ffb4ab",
+              "surface-bright": "#37393e",
+              "outline": "#86948a",
+              "on-secondary-fixed-variant": "#004395",
+              "on-primary-fixed": "#002113",
+              "surface-variant": "#333539",
+              "surface-container-lowest": "#0c0e12",
+              "primary": "#4edea3",
+              "on-tertiary-fixed": "#410005",
+              "on-tertiary": "#650911",
+              "surface": "#111318",
+              "secondary": "#adc6ff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-container-highest": "#333539",
+              "primary-container": "#10b981",
+              "on-error-container": "#ffdad6",
+              "background": "#111318",
+              "surface-container-high": "#282a2e",
+              "primary-fixed": "#6ffbbe",
+              "tertiary-container": "#fc7c78",
+              "surface-dim": "#111318",
+              "secondary-fixed": "#d8e2ff",
+              "on-surface-variant": "#bbcabf",
+              "on-secondary-fixed": "#001a42"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["DM Sans"],
+              "label": ["DM Sans"],
+              "mono": ["DM Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>body {
+    background-color: #111318;
+    color: #e2e2e8;
+    font-family: "DM Sans", sans-serif;
+    position: relative
+    }
+/* Grain Texture Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.03;
+    z-index: 9999;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCSwyhchQCullahe_N6_Qy5efd5j_JJAQwRm9ZTVNlpyqijAD6jbU_FlmLjNjVF9uXhtmv0vbwRK0GV51Y3hNapC7_D5oUbEGnRr5jeli04vRkPIDD1QLk6MvdDGHgztfuf1XtRxpv1IyXNdKzn-dKCu2PeXJFYEHymZPDl0MaRj955hy4tbGz5JbYLQHeTNafujZtYweXyixts3eQUOzQcqN-GlK3tFx7TNe7-Pr94i03AKA_fGpjGXXeYF8ucHtTX8p_4uPb0K0Y)
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    vertical-align: middle
+    }
+.glow-button:hover {
+    box-shadow: 0 0 15px rgba(78, 222, 163, 0.4)
+    }
+.asymmetric-shape {
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%)
+    }</style>
+</head>
+<body class="bg-surface flex flex-col min-h-screen">
+<!-- Top Navigation Bar - Context: Transactional Suppression implies minimal branding here, but following JSON structure for brand identity -->
+<header class="bg-[#0c0e12]/80 backdrop-blur-md fixed top-0 z-50 w-full">
+<div class="flex items-center justify-between px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-emerald-500 font-['Space_Grotesk']">
+                NexCode
+            </div>
+<div class="flex items-center gap-6">
+<span class="text-slate-400 font-['Space_Grotesk'] font-medium tracking-tight text-sm">Already a member?</span>
+<a class="text-emerald-500 font-bold hover:text-emerald-300 transition-colors duration-200" href="#">Log In</a>
+</div>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center px-4 pt-24 pb-12 relative overflow-hidden">
+<!-- Ambient Background Glows -->
+<div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/10 blur-[100px] rounded-full"></div>
+<div class="absolute bottom-1/4 -right-20 w-80 h-80 bg-secondary/5 blur-[120px] rounded-full"></div>
+<div class="w-full max-w-md z-10">
+<!-- Asymmetric Editorial Header -->
+<div class="mb-10 text-left">
+<h1 class="font-headline text-5xl font-black text-on-surface tracking-tighter leading-none mb-2">
+                    INITIATE <span class="text-primary italic">BUILD</span>
+</h1>
+<p class="text-on-surface-variant font-mono text-sm tracking-wide opacity-80 uppercase">
+                    Step into the obsidian architecture.
+                </p>
+</div>
+<!-- Registration Card (Glassmorphism) -->
+<div class="bg-surface-container/60 backdrop-blur-xl p-8 shadow-2xl relative overflow-hidden group">
+<!-- Intentional Asymmetry: Accent line -->
+<div class="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-colors duration-500"></div>
+<form class="space-y-6">
+<!-- Full Name -->
+<div class="space-y-1">
+<label class="block text-xs font-mono uppercase tracking-widest text-on-surface-variant opacity-60 ml-1">Full Name</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body py-3 transition-all duration-300 placeholder:text-on-surface/20" placeholder="ARCHITECT NAME" type="text"/>
+<div class="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-500 focus-within:w-full"></div>
+</div>
+</div>
+<!-- Email -->
+<div class="space-y-1">
+<label class="block text-xs font-mono uppercase tracking-widest text-on-surface-variant opacity-60 ml-1">Email Address</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body py-3 transition-all duration-300 placeholder:text-on-surface/20" placeholder="NODE@NEXCODE.IO" type="email"/>
+</div>
+</div>
+<!-- Username -->
+<div class="space-y-1">
+<label class="block text-xs font-mono uppercase tracking-widest text-on-surface-variant opacity-60 ml-1">Handle</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body py-3 transition-all duration-300 placeholder:text-on-surface/20" placeholder="USER_IDENTIFIER" type="text"/>
+</div>
+</div>
+<!-- Password -->
+<div class="space-y-1">
+<label class="block text-xs font-mono uppercase tracking-widest text-on-surface-variant opacity-60 ml-1">Security Key</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body py-3 transition-all duration-300 placeholder:text-on-surface/20" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<!-- Terms Checkbox -->
+<div class="flex items-center space-x-3 py-2">
+<div class="relative flex items-center">
+<input class="h-4 w-4 rounded-none bg-surface-container-highest border-outline-variant text-primary focus:ring-offset-background focus:ring-primary" id="terms" type="checkbox"/>
+</div>
+<label class="text-xs font-body text-on-surface-variant leading-tight" for="terms">
+                            I agree to the <a class="text-primary hover:underline transition-all" href="#">Terms &amp; Conditions</a> and data protocol.
+                        </label>
+</div>
+<!-- Submit Button -->
+<div class="pt-4">
+<button class="glow-button w-full bg-primary-container text-on-primary-container font-headline font-bold py-4 tracking-tighter uppercase text-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all" type="submit">
+                            Create Account
+                            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</form>
+<div class="mt-8 flex items-center justify-between text-[10px] font-mono tracking-widest opacity-40 uppercase">
+<span>Precision Secured</span>
+<span>V 2.0.4-BETA</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer - Mapping from Shared Components JSON -->
+<footer class="bg-[#0c0e12] flex flex-col md:flex-row justify-between items-center px-12 py-8 w-full border-t border-[#333539] mt-auto">
+<div class="mb-4 md:mb-0">
+<span class="text-lg font-bold text-emerald-500 font-['Space_Grotesk']">NexCode</span>
+<p class="text-slate-500 font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">
+                © 2024 NexCode. Precision engineered for the Obsidian Architect.
+            </p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Documentation</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Terms of Service</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-emerald-400 transition-colors" href="#">Contact Support</a>
+</div>
+</footer>
+</body></html>

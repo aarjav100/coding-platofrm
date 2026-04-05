@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodeForge | Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface": "#eaeaf5",
+              "on-secondary": "#064e3b",
+              "surface-tint": "#10b981",
+              "inverse-surface": "#faf8ff",
+              "tertiary": "#3b82f6",
+              "surface-container-low": "#0f1118",
+              "tertiary-fixed": "#93c5fd",
+              "secondary-container": "#065f46",
+              "tertiary-fixed-dim": "#60a5fa",
+              "on-secondary-container": "#d1fae5",
+              "on-background": "#eaeaf5",
+              "secondary-fixed-dim": "#6ee7b7",
+              "primary-fixed-dim": "#6ee7b7",
+              "surface-variant": "#1a1d26",
+              "secondary-dim": "#10b981",
+              "on-secondary-fixed-variant": "#047857",
+              "on-primary-fixed": "#064e3b",
+              "outline-variant": "#334155",
+              "inverse-primary": "#059669",
+              "error-dim": "#ef4444",
+              "secondary": "#10b981",
+              "on-tertiary-fixed": "#1e3a8a",
+              "surface-container-high": "#161a23",
+              "primary-dim": "#10b981",
+              "primary-fixed": "#34d399",
+              "on-error-container": "#fee2e2",
+              "background": "#0a0c10",
+              "on-primary-fixed-variant": "#065f46",
+              "tertiary-container": "#1e40af",
+              "surface-container": "#11141d",
+              "on-tertiary-container": "#dbeafe",
+              "inverse-on-surface": "#475569",
+              "on-primary-container": "#d1fae5",
+              "on-error": "#450a0a",
+              "tertiary-dim": "#60a5fa",
+              "on-primary": "#064e3b",
+              "on-tertiary-fixed-variant": "#1e40af",
+              "outline": "#64748b",
+              "error-container": "#991b1b",
+              "error": "#f87171",
+              "surface-bright": "#222733",
+              "surface": "#0a0c10",
+              "primary": "#10b981",
+              "on-tertiary": "#ffffff",
+              "surface-container-lowest": "#000000",
+              "surface-container-highest": "#1c212b",
+              "primary-container": "#10b981",
+              "on-surface-variant": "#94a3b8",
+              "on-secondary-fixed": "#064e3b",
+              "secondary-fixed": "#a7f3d0",
+              "surface-dim": "#0a0c10"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["DM Sans"],
+              "label": ["DM Sans"],
+              "mono": ["DM Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+            display: inline-block;
+            line-height: 1
+        }
+        body {
+            background-color: #0a0c10;
+            background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0, transparent 50%)
+        }
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDNERAJyIzFd8d5OBwrCcf0Z7jlq3PHGN9R-flvah5Dk2QsOGcDia50s7uRBQlI_IQC8yklX2VDCt0xrTV86oYq4Fpd0Erq7IEhvQvpnNWvYXtChdzmNuqUZh13xCN7DKcs5vKncyM0fnKAMgshnWyI-ruCzAdGQUOMZH0SZlc0OnHd39Yiscazh19RY5Pc-0ZDyMgvr53HUi88LRQr2ltmRLc5WOr2uQEkKWaMQ2fsR-1tCkG6iIgAEd3mkndhHPOhsOq7VA5Yrkw)
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface min-h-screen flex flex-col">
+<div class="noise-overlay"></div>
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#161a23]/60 backdrop-blur-xl shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex justify-between items-center px-8 h-20 w-full max-w-none">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#10b981] to-[#3b82f6]">CodeForge</span>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-[#10b981] relative after:content-[''] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-[#10b981] after:rounded-full hover:text-[#10b981] transition-colors duration-300" href="#">Platform</a>
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-[#eaeaf5]/70 hover:text-[#10b981] transition-colors duration-300" href="#">Docs</a>
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-[#eaeaf5]/70 hover:text-[#10b981] transition-colors duration-300" href="#">Pricing</a>
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-[#eaeaf5]/70 hover:text-[#10b981] transition-colors duration-300" href="#">Enterprise</a>
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-[#eaeaf5]/70 hover:text-[#10b981] transition-colors duration-300" href="#">Blog</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center bg-surface-container-high rounded-full px-4 py-2 group focus-within:ring-1 focus-within:ring-primary/30">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface placeholder:text-on-surface-variant" placeholder="Search resources..." type="text"/>
+</div>
+<button class="flex items-center gap-2 p-2 hover:bg-surface-variant rounded-full transition-all">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-tertiary p-[1px]">
+<div class="w-full h-full rounded-full bg-surface-container overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Cyberpunk style developer avatar with neon lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIBvzu3no9fEky7_UIfuYMkTZCRnz1U1I4Mi0FGdpVd_GjCTSA2gJzq8-izVpd2y8FQoNVTgvLIEMgJTItPNEu_qe9MmAxX-kZJAPeKCiS1eGOuTS9iI8_VsTKLJZ0_O36Sj3qgqLs1Arf9PehSwxQN4w9oHiBcuee45dRbprmTpe5skA5X0iLPsKnOfoEjT6nJ50cnht8eO0C4aRcF7xGFm1MHwKOH347etH8B961Jt3eAzqRjoptPftVHL2QOVh9kDNf2D-xLNU"/>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 pt-20">
+<!-- Sidebar Navigation -->
+<aside class="w-64 fixed left-0 h-[calc(100vh-80px)] bg-surface-container-low/30 backdrop-blur-md px-6 py-8 flex flex-col gap-8">
+<div class="space-y-2">
+<p class="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase px-2 mb-4">Workspace</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-medium group transition-all" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Projects</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface group transition-all" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">rocket_launch</span>
+<span>Deployments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface group transition-all" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">analytics</span>
+<span>Analytics</span>
+</a>
+</div>
+<div class="space-y-2">
+<p class="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase px-2 mb-4">System</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface group transition-all" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface group transition-all" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">security</span>
+<span>Security</span>
+</a>
+</div>
+<div class="mt-auto">
+<div class="bg-surface-container-high rounded-xl p-4 border border-outline-variant/10">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-bold text-on-surface-variant">PLAN: PRO</span>
+<span class="text-[10px] text-primary">82%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden mb-3">
+<div class="h-full bg-gradient-to-r from-primary to-tertiary w-[82%] relative">
+<div class="absolute right-0 top-0 bottom-0 w-4 bg-white/20 blur-sm"></div>
+</div>
+</div>
+<button class="w-full py-2 text-xs font-bold bg-surface-variant hover:bg-surface-bright rounded-lg transition-colors border border-outline-variant/20">Upgrade Space</button>
+</div>
+</div>
+</aside>
+<!-- Main Dashboard Canvas -->
+<main class="ml-64 flex-1 p-10 max-w-7xl">
+<header class="flex justify-between items-end mb-12">
+<div>
+<h1 class="text-5xl font-['Space_Grotesk'] font-extrabold tracking-tighter mb-2">Command Center</h1>
+<p class="text-on-surface-variant max-w-lg">Orchestrate your cloud architecture from a single technical node. High performance guaranteed.</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-3.5 bg-primary text-on-primary font-bold rounded-lg hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">add</span>
+                    Create New Project
+                </button>
+</header>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Active Projects List -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container rounded-xl overflow-hidden border border-outline-variant/5">
+<div class="px-6 py-5 border-b border-outline-variant/10 flex justify-between items-center">
+<h2 class="font-['Space_Grotesk'] font-bold text-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">terminal</span>
+                            Active Projects
+                        </h2>
+<span class="text-xs text-on-surface-variant font-mono">3 Running Instances</span>
+</div>
+<div class="divide-y divide-outline-variant/10">
+<!-- Project Item 1 -->
+<div class="px-6 py-5 flex items-center justify-between hover:bg-surface-variant/40 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-tertiary">cloud_done</span>
+</div>
+<div>
+<h3 class="font-bold text-on-surface group-hover:text-primary transition-colors">Nexus-API-Gateway</h3>
+<p class="text-xs text-on-surface-variant font-mono">v1.2.4 • Production Cluster</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface">Uptime</p>
+<p class="text-xs font-mono text-primary">99.98%</p>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
+<span class="text-[10px] font-bold text-primary tracking-wider">ACTIVE</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Project Item 2 -->
+<div class="px-6 py-5 flex items-center justify-between hover:bg-surface-variant/40 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary">database</span>
+</div>
+<div>
+<h3 class="font-bold text-on-surface group-hover:text-primary transition-colors">Vector-Core-DB</h3>
+<p class="text-xs text-on-surface-variant font-mono">v4.0.0-beta • Staging</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface">Uptime</p>
+<p class="text-xs font-mono text-primary">100.0%</p>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
+<span class="text-[10px] font-bold text-primary tracking-wider">ACTIVE</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Project Item 3 -->
+<div class="px-6 py-5 flex items-center justify-between hover:bg-surface-variant/40 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-error">developer_board</span>
+</div>
+<div>
+<h3 class="font-bold text-on-surface group-hover:text-primary transition-colors">Auth-Sentinel</h3>
+<p class="text-xs text-on-surface-variant font-mono">v0.9.1 • Dev Environment</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface">Uptime</p>
+<p class="text-xs font-mono text-on-surface-variant">N/A</p>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-surface-variant border border-outline-variant/20">
+<div class="w-2 h-2 rounded-full bg-on-surface-variant"></div>
+<span class="text-[10px] font-bold text-on-surface-variant tracking-wider">STANDBY</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Deployment Logs (Terminal Widget) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant/20 flex flex-col h-full min-h-[400px]">
+<div class="bg-surface-container-high px-4 py-3 flex items-center justify-between rounded-t-xl border-b border-outline-variant/30">
+<div class="flex gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-[#ef4444]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#f59e0b]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></div>
+</div>
+<span class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">System_Logs</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant">terminal</span>
+</div>
+<div class="flex-1 p-5 font-mono text-xs overflow-y-auto space-y-2">
+<p class="text-primary-fixed-dim">[14:22:01] Initializing build sequence...</p>
+<p class="text-on-surface-variant">[14:22:05] Checking environment: Production</p>
+<p class="text-on-surface-variant">[14:22:08] Dependencies resolved. Pulling 124 images.</p>
+<p class="text-tertiary-fixed-dim">[14:22:15] Compiling CodeForge_Sentinel_v1.2...</p>
+<p class="text-on-surface-variant">[14:22:45] Optimizing build assets... 84%</p>
+<p class="text-primary-dim">[14:23:02] Hooking up global edge cache...</p>
+<p class="text-primary font-bold">[14:23:10] DEPLOYMENT SUCCESSFUL: node_cf_8312</p>
+<p class="text-on-surface-variant mt-4">--- New Session ---</p>
+<p class="text-on-surface-variant animate-pulse">$ <span class="w-2 h-4 bg-primary inline-block align-middle ml-1"></span></p>
+</div>
+<div class="p-3 bg-surface-container-high/30 border-t border-outline-variant/10 text-center">
+<button class="text-[10px] font-bold text-primary hover:underline">Download Log History</button>
+</div>
+</div>
+<!-- Analytics Spotlight (Asymmetric card) -->
+<div class="col-span-12 md:col-span-7 bg-surface-container-high rounded-xl p-8 border border-outline-variant/5 relative overflow-hidden flex items-center justify-between">
+<div class="relative z-10">
+<h4 class="text-on-surface-variant text-xs font-bold tracking-[0.2em] uppercase mb-1">Global Throughput</h4>
+<div class="flex items-baseline gap-2 mb-4">
+<span class="text-4xl font-black font-['Space_Grotesk'] text-on-surface">12.4</span>
+<span class="text-lg font-bold text-primary">PB/sec</span>
+</div>
+<div class="flex gap-1 items-end h-16">
+<div class="w-2 bg-primary/20 h-full rounded-t-sm"></div>
+<div class="w-2 bg-primary/40 h-3/4 rounded-t-sm"></div>
+<div class="w-2 bg-primary/30 h-1/2 rounded-t-sm"></div>
+<div class="w-2 bg-primary/60 h-[90%] rounded-t-sm"></div>
+<div class="w-2 bg-primary/80 h-[40%] rounded-t-sm"></div>
+<div class="w-2 bg-primary h-[95%] rounded-t-sm shadow-[0_0_10px_rgba(16,185,129,0.4)]"></div>
+<div class="w-2 bg-tertiary h-[70%] rounded-t-sm"></div>
+<div class="w-2 bg-tertiary/60 h-[50%] rounded-t-sm"></div>
+<div class="w-2 bg-tertiary/40 h-[80%] rounded-t-sm"></div>
+</div>
+</div>
+<div class="relative z-10 text-right">
+<p class="text-xs font-bold text-on-surface-variant mb-4">Network Health</p>
+<div class="flex items-center justify-end gap-2">
+<span class="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin duration-[3s]"></span>
+<span class="text-2xl font-bold text-on-surface">Nominal</span>
+</div>
+</div>
+<!-- Abstract Background Blob -->
+<div class="absolute -right-20 -bottom-20 w-64 h-64 bg-primary/5 blur-[100px] rounded-full"></div>
+</div>
+<!-- Secondary Metric Card -->
+<div class="col-span-12 md:col-span-5 bg-gradient-to-br from-secondary-container to-surface-container rounded-xl p-8 border border-outline-variant/10 relative group">
+<span class="material-symbols-outlined text-4xl text-on-secondary-container opacity-30 absolute right-8 top-8 group-hover:scale-110 transition-transform">bolt</span>
+<h4 class="text-on-secondary-container text-xs font-bold tracking-[0.2em] uppercase mb-4">Compute Efficiency</h4>
+<div class="text-4xl font-black text-white mb-2">94%</div>
+<p class="text-on-secondary-container/70 text-sm">System performance is exceeding historical benchmarks by 12%.</p>
+<button class="mt-6 text-xs font-bold text-white flex items-center gap-2 group">
+                        View Detailed Report
+                        <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer Area -->
+<footer class="bg-[#0a0c10] w-full py-12 px-8 mt-auto border-t border-[#161a23] flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col gap-2">
+<span class="text-xl font-black text-[#10b981]">CodeForge</span>
+<p class="font-['DM_Sans'] text-sm tracking-normal text-[#eaeaf5]/50">© 2024 CodeForge. All rights reserved. Built for the neon architect.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-['DM_Sans'] text-sm tracking-normal text-[#eaeaf5]/50 hover:text-[#3b82f6] hover:underline decoration-[#3b82f6] transition-all" href="#">Privacy Policy</a>
+<a class="font-['DM_Sans'] text-sm tracking-normal text-[#eaeaf5]/50 hover:text-[#3b82f6] hover:underline decoration-[#3b82f6] transition-all" href="#">Terms of Service</a>
+<a class="font-['DM_Sans'] text-sm tracking-normal text-[#eaeaf5]/50 hover:text-[#3b82f6] hover:underline decoration-[#3b82f6] transition-all" href="#">Cookie Policy</a>
+<a class="font-['DM_Sans'] text-sm tracking-normal text-[#eaeaf5]/50 hover:text-[#3b82f6] hover:underline decoration-[#3b82f6] transition-all" href="#">Security</a>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodeForge | The Enterprise Development Platform</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Syne:wght@700;800&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed-variant": "#006544",
+            "on-primary-fixed-variant": "#005762",
+            "on-tertiary-fixed": "#00452d",
+            "surface-dim": "#0c0e15",
+            "on-primary-container": "#004d57",
+            "inverse-surface": "#faf8ff",
+            "surface-container-high": "#1c1f29",
+            "outline": "#73757f",
+            "secondary-dim": "#8a4cfc",
+            "on-surface": "#eaeaf5",
+            "primary-fixed": "#00e3fd",
+            "secondary-fixed-dim": "#d0b8ff",
+            "error-dim": "#d7383b",
+            "on-error": "#490006",
+            "tertiary-fixed-dim": "#58e7ab",
+            "secondary-container": "#6001d1",
+            "on-background": "#eaeaf5",
+            "error": "#ff716c",
+            "on-primary": "#005762",
+            "on-secondary-fixed-variant": "#6514d6",
+            "error-container": "#9f0519",
+            "primary-dim": "#00d4ec",
+            "outline-variant": "#464850",
+            "primary": "#81ecff",
+            "on-tertiary-container": "#005a3c",
+            "inverse-on-surface": "#53555e",
+            "surface-container-low": "#10131b",
+            "primary-fixed-dim": "#00d4ec",
+            "tertiary-container": "#69f6b8",
+            "surface-variant": "#222530",
+            "background": "#0c0e15",
+            "surface-container-highest": "#222530",
+            "surface-bright": "#282c38",
+            "secondary-fixed": "#dcc9ff",
+            "on-secondary-container": "#e1d0ff",
+            "secondary": "#af88ff",
+            "surface-tint": "#81ecff",
+            "surface": "#0c0e15",
+            "inverse-primary": "#006976",
+            "tertiary": "#9bffce",
+            "surface-container": "#161922",
+            "tertiary-fixed": "#69f6b8",
+            "on-surface-variant": "#a9aab5",
+            "on-secondary-fixed": "#430097",
+            "on-error-container": "#ffa8a3",
+            "primary-container": "#00e3fd",
+            "tertiary-dim": "#58e7ab",
+            "surface-container-lowest": "#000000",
+            "on-tertiary": "#006443",
+            "on-primary-fixed": "#003840",
+            "on-secondary": "#2b0065"
+          },
+          fontFamily: {
+            "headline": ["Syne", "sans-serif"],
+            "body": ["DM Sans", "sans-serif"],
+            "mono": ["DM Mono", "monospace"],
+            "brand": ["Space Grotesk", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #0c0e15;
+      background-image: radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 50%), 
+                        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: auto, 150px 150px;
+      color: #eaeaf5;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .glass-nav {
+      background: rgba(28, 31, 41, 0.6);
+      backdrop-filter: blur(20px);
+    }
+    .syntax-fn { color: #81ecff; }
+    .syntax-kw { color: #af88ff; }
+    .syntax-str { color: #9bffce; }
+    .cursor-blink { animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .glow-cyan { text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+    .floating-blob {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(129, 236, 255, 0.15) 0%, transparent 70%);
+      filter: blur(60px);
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Nav Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#1c1f29]/60 backdrop-blur-xl shadow-[0px_24px_48px_rgba(0,0,0,0.5)] transition-all duration-300">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+<div class="text-2xl font-extrabold tracking-tighter text-[#00e5ff] font-brand">
+        CodeForge
+      </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-[#00e5ff] relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-[#00e5ff] font-['Space_Grotesk'] font-bold tracking-tighter" href="#">Platform</a>
+<a class="text-[#eaeaf5]/80 hover:text-[#00e5ff] transition-colors font-['Space_Grotesk'] font-bold tracking-tighter" href="#">Docs</a>
+<a class="text-[#eaeaf5]/80 hover:text-[#00e5ff] transition-colors font-['Space_Grotesk'] font-bold tracking-tighter" href="#">Pricing</a>
+<a class="text-[#eaeaf5]/80 hover:text-[#00e5ff] transition-colors font-['Space_Grotesk'] font-bold tracking-tighter" href="#">Enterprise</a>
+<a class="text-[#eaeaf5]/80 hover:text-[#00e5ff] transition-colors font-['Space_Grotesk'] font-bold tracking-tighter" href="#">Blog</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#eaeaf5]/80 hover:text-[#00e5ff] font-medium px-4 py-2 transition-all">Sign In</button>
+<button class="bg-primary-container text-on-primary-container font-bold px-6 py-2 rounded-lg hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all duration-300">Start Free</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<main class="pt-32 pb-20 px-6 relative">
+<div class="floating-blob -top-20 -left-20"></div>
+<div class="floating-blob bottom-40 -right-20" style="background: radial-gradient(circle, rgba(175, 136, 255, 0.1) 0%, transparent 70%);"></div>
+<div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/30 text-xs font-mono font-bold tracking-widest text-primary-fixed uppercase">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+          BETA 2.4 Now Live
+        </div>
+<h1 class="text-6xl md:text-8xl font-headline font-extrabold text-on-surface leading-[0.9] tracking-tighter">
+          The Enterprise <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Development</span> Platform
+        </h1>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed font-body">
+          Forge high-performance applications with AI-assisted workflows, real-time collaboration, and global-scale infrastructure.
+        </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary-container text-on-primary-container px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:scale-[1.05] transition-transform">
+            Get Started Free
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold flex items-center gap-2 border border-outline-variant/20 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+            Watch Demo
+          </button>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8">
+<div>
+<div class="text-3xl font-brand font-bold text-on-surface">500k+</div>
+<div class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Developers</div>
+</div>
+<div>
+<div class="text-3xl font-brand font-bold text-on-surface">12B+</div>
+<div class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Lines Deployed</div>
+</div>
+<div>
+<div class="text-3xl font-brand font-bold text-on-surface">99.9%</div>
+<div class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Uptime</div>
+</div>
+<div>
+<div class="text-3xl font-brand font-bold text-on-surface">2.4ms</div>
+<div class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Latency</div>
+</div>
+</div>
+</div>
+<!-- Terminal Mockup -->
+<div class="relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur-2xl group-hover:blur-3xl transition-all opacity-70"></div>
+<div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden shadow-2xl">
+<div class="flex items-center gap-2 px-4 py-3 bg-surface-container-high/50 border-b border-outline-variant/20">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-error-dim/50"></div>
+<div class="w-3 h-3 rounded-full bg-primary/30"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary/30"></div>
+</div>
+<div class="text-[10px] font-mono text-on-surface-variant mx-auto">main.cf — CodeForge IDE</div>
+</div>
+<div class="p-6 font-mono text-sm leading-relaxed min-h-[400px]">
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">1</span>
+<span><span class="syntax-kw">import</span> { CodeForge } <span class="syntax-kw">from</span> <span class="syntax-str">'@forge/core'</span>;</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">2</span>
+<span></span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">3</span>
+<span><span class="syntax-kw">async function</span> <span class="syntax-fn">initializeDeployment</span>() {</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">4</span>
+<span>  <span class="syntax-kw">const</span> engine = <span class="syntax-kw">new</span> <span class="syntax-fn">CodeForge</span>({</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">5</span>
+<span>    region: <span class="syntax-str">'us-east-1'</span>,</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">6</span>
+<span>    scale: <span class="syntax-kw">true</span></span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">7</span>
+<span>  });</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">8</span>
+<span></span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">9</span>
+<span>  <span class="syntax-kw">await</span> engine.<span class="syntax-fn">deploy</span>({</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">10</span>
+<span>    target: <span class="syntax-str">'enterprise-edge'</span>,</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">11</span>
+<span>    onSuccess: () =&gt; <span class="syntax-fn">log</span>(<span class="syntax-str">'Deployed!'</span>)</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">12</span>
+<span>  });</span>
+</div>
+<div class="flex gap-4">
+<span class="text-outline-variant select-none">13</span>
+<span>} <span class="cursor-blink w-1.5 h-4 bg-primary inline-block ml-1 align-middle"></span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Trusted By Marquee -->
+<section class="py-12 border-y border-outline-variant/10 overflow-hidden bg-surface-container-low/30">
+<div class="flex items-center gap-12 whitespace-nowrap animate-marquee px-4">
+<div class="flex items-center gap-12 text-on-surface-variant font-brand text-xl font-bold grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer">
+<span>STRIPE</span>
+<span>NOTION</span>
+<span>VERCEL</span>
+<span>LINEAR</span>
+<span>FIGMA</span>
+<span>SUPABASE</span>
+<span>STRIPE</span>
+<span>NOTION</span>
+<span>VERCEL</span>
+<span>LINEAR</span>
+<span>FIGMA</span>
+<span>SUPABASE</span>
+</div>
+</div>
+</section>
+<!-- Features Grid -->
+<section class="py-24 px-6 max-w-[1200px] mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-5xl font-headline font-bold mb-4">Engineered for Velocity</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto">Everything you need to ship world-class software without the infrastructure headache.</p>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Feature 1 -->
+<div class="p-8 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/50 hover:bg-surface-variant/50 transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<h3 class="text-xl font-brand font-bold mb-3">AI Code Intelligence</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Context-aware suggestions that understand your entire codebase, not just the current file.</p>
+</div>
+<!-- Feature 2 -->
+<div class="p-8 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/50 hover:bg-surface-variant/50 transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">group</span>
+</div>
+<h3 class="text-xl font-brand font-bold mb-3">Real-Time Collaboration</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Pair program globally with zero latency. Seamless integration with voice and video built-in.</p>
+</div>
+<!-- Feature 3 -->
+<div class="p-8 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/50 hover:bg-surface-variant/50 transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">security</span>
+</div>
+<h3 class="text-xl font-brand font-bold mb-3">Enterprise Security</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">SOC2 Type II compliant with end-to-end encryption and granular RBAC controls.</p>
+</div>
+<!-- Feature 4 -->
+<div class="p-8 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/50 hover:bg-surface-variant/50 transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">rocket_launch</span>
+</div>
+<h3 class="text-xl font-brand font-bold mb-3">One-Click Deployment</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Push to main and let our global edge network handle the rest. Automatic blue-green deploys.</p>
+</div>
+<!-- Feature 5 -->
+<div class="p-8 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/50 hover:bg-surface-variant/50 transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">rule</span>
+</div>
+<h3 class="text-xl font-brand font-bold mb-3">Code Review &amp; QA</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Automated visual regressions and unit test suites that run in parallel, finishing in seconds.</p>
+</div>
+<!-- Feature 6 -->
+<div class="p-8 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/50 hover:bg-surface-variant/50 transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">insights</span>
+</div>
+<h3 class="text-xl font-brand font-bold mb-3">Analytics &amp; Insights</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">DORA metrics and productivity heatmaps to help you identify and remove bottlenecks.</p>
+</div>
+</div>
+</section>
+<!-- Pricing -->
+<section class="py-24 px-6 bg-surface-container-low/50">
+<div class="max-w-[1200px] mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-5xl font-headline font-bold mb-4">Scale your Ambition</h2>
+<p class="text-on-surface-variant">Simple, predictable pricing for every stage of your growth.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Starter -->
+<div class="p-8 rounded-2xl bg-surface border border-outline-variant/20 flex flex-col">
+<div class="mb-8">
+<h3 class="text-xl font-brand font-bold mb-2">Starter</h3>
+<div class="text-4xl font-headline font-extrabold mb-1">$0</div>
+<p class="text-xs text-on-surface-variant">Free forever for personal projects</p>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              Unlimited Public Repos
+            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              Standard AI Completions
+            </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-error text-lg">cancel</span>
+              Custom Domains
+            </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-error text-lg">cancel</span>
+              Advanced RBAC
+            </li>
+</ul>
+<button class="w-full py-3 border border-outline-variant/30 rounded-xl font-bold hover:bg-surface-variant transition-colors">Choose Starter</button>
+</div>
+<!-- Pro -->
+<div class="p-8 rounded-2xl bg-surface-container border-2 border-primary relative flex flex-col shadow-[0_0_40px_rgba(0,229,255,0.1)]">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">Most Popular</div>
+<div class="mb-8">
+<h3 class="text-xl font-brand font-bold mb-2">Pro</h3>
+<div class="text-4xl font-headline font-extrabold mb-1">$49<span class="text-lg font-body text-on-surface-variant font-normal">/seat</span></div>
+<p class="text-xs text-on-surface-variant">Best for growing teams</p>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              All Starter Features
+            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              Advanced AI Fine-tuning
+            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              Priority Deployments
+            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              SSO &amp; Team Analytics
+            </li>
+</ul>
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] transition-all">Get Pro</button>
+</div>
+<!-- Enterprise -->
+<div class="p-8 rounded-2xl bg-surface border border-outline-variant/20 flex flex-col">
+<div class="mb-8">
+<h3 class="text-xl font-brand font-bold mb-2">Enterprise</h3>
+<div class="text-4xl font-headline font-extrabold mb-1">Custom</div>
+<p class="text-xs text-on-surface-variant">For large-scale organizations</p>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              Dedicated Support Engineer
+            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              On-Prem / Private Cloud
+            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              Custom Compliance Packs
+            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+              Unlimited History Retention
+            </li>
+</ul>
+<button class="w-full py-3 border border-outline-variant/30 rounded-xl font-bold hover:bg-surface-variant transition-colors">Contact Sales</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-24 px-6 max-w-[1200px] mx-auto">
+<div class="grid lg:grid-cols-3 gap-8">
+<div class="p-8 rounded-2xl bg-surface-container border border-outline-variant/20 relative">
+<span class="material-symbols-outlined text-primary text-5xl absolute top-6 right-8 opacity-20">format_quote</span>
+<div class="flex gap-1 mb-6">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface mb-8 italic">"CodeForge transformed how our engineering team ships. The AI integration is actually useful, not just a gimmick."</p>
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover grayscale" data-alt="Portrait of a male engineering manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4Vcp3KBPxc0_kMlKi9SOiTN0yqKzuam-78XPaBcEHu-wCt_0-brXGSrW_aGM7VfBCPlr5G2mp4A0WgCzJ1-_lohpCTWKkNpCY_hs9aEPyiGqSXLL5mGdznhmFYBORJqbwHa4pXbx4NodMhZJDMHIP6Eqwgs7JlOYjmcegeamzj74iWu20iNyu66au4VvUpLm1hHAYSby4RgLeZ3yaWnlLiE3gx9svQiFlHBroQrkVMYsTJS2JupqK1Wboyt9DcYB9MFNuEwjRyIs"/>
+<div>
+<div class="font-bold text-sm">Sarah Jenkins</div>
+<div class="text-xs text-on-surface-variant">CTO @ Linear</div>
+</div>
+</div>
+</div>
+<div class="p-8 rounded-2xl bg-surface-container border border-outline-variant/20 relative">
+<span class="material-symbols-outlined text-primary text-5xl absolute top-6 right-8 opacity-20">format_quote</span>
+<div class="flex gap-1 mb-6">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface mb-8 italic">"The real-time collaboration is the best I've ever seen. We paired from Tokyo and London with zero issues."</p>
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover grayscale" data-alt="Portrait of a female lead software developer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7mBe7Zv-WNu5-O4YaVJRAClMDSSuGo2nGGjiS_YLMt2-NvXydlIG58mNf7YB5pRfOIDCoxEEjlSobTbeTT_9_2maVixcal20dHA3mYUh6e6y-PZVc7gBguApKIGB6cQCKseIg1RSkZ-dWdTx8y6wbog8GIBvY0yne00PyUsYXAQoUuDhXCMQeQg8oFzWbLymS5qvxczNJ5uOY0HaStwcq09rT7c5n1LWO8suRRwoWBFkFhzN8AxuGXUI42zRWibLPC_FqHJJZpcM"/>
+<div>
+<div class="font-bold text-sm">Marcus Chen</div>
+<div class="text-xs text-on-surface-variant">Lead Developer @ Notion</div>
+</div>
+</div>
+</div>
+<div class="p-8 rounded-2xl bg-surface-container border border-outline-variant/20 relative">
+<span class="material-symbols-outlined text-primary text-5xl absolute top-6 right-8 opacity-20">format_quote</span>
+<div class="flex gap-1 mb-6">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface mb-8 italic">"We migrated 400 repos in a weekend. The CLI tool is absolutely bulletproof. Best DX on the market."</p>
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover grayscale" data-alt="Portrait of a male DevOps engineer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA52BtYmXBOnWwOdZ2bkTOUxsdDz4HRlXq01aLXCsfM0zNa3mu5SFFaFddwZs4MT1IQsQWbk1FGxlXAlCleczDwjMMh-n2M4W0ATmM94bbMllJtR29az7_Z3S3sCzJbbkVczz3CKl7Zt0W2JUK0Riee7aJ6wlCp3NUoibWkrsn5DPeV_ioFI5FEYy_UuJqN4VjSMbZ2yOIlhxtd5QnZ0dYTeAEDiIUsFwlMZKWJivB-tIpsk8G7htKWNNdvLeHtkDX1rzXrnc9P8nw"/>
+<div>
+<div class="font-bold text-sm">Elena Rodriguez</div>
+<div class="text-xs text-on-surface-variant">VP Engineering @ Supabase</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="py-24 px-6">
+<div class="max-w-[1200px] mx-auto relative p-12 md:p-20 rounded-3xl overflow-hidden text-center">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-surface-container-high to-secondary/20 -z-10"></div>
+<div class="absolute inset-0 bg-[#0c0e15]/60 backdrop-blur-sm -z-10"></div>
+<div class="absolute -top-1/2 -left-1/4 w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.05)_0,transparent_50%)] -z-10"></div>
+<h2 class="text-5xl md:text-7xl font-headline font-bold mb-8">Ready to Build the Future?</h2>
+<p class="text-xl text-on-surface-variant mb-12 max-w-2xl mx-auto font-body">Join 500k+ developers and start for free today. No credit card required, instant setup.</p>
+<div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+<button class="px-10 py-5 bg-primary-container text-on-primary-container font-extrabold rounded-2xl shadow-[0_0_30px_rgba(0,229,255,0.3)] hover:scale-105 transition-transform">Get Started Now</button>
+<button class="px-10 py-5 border border-outline-variant text-on-surface font-bold rounded-2xl hover:bg-surface-variant transition-all">Schedule Enterprise Demo</button>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full border-t border-[#1c1f29] bg-[#0c0e15]">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 py-12 max-w-[1440px] mx-auto">
+<div class="mb-8 md:mb-0">
+<div class="text-xl font-extrabold text-[#00e5ff] font-brand mb-2">CodeForge</div>
+<div class="text-sm text-[#eaeaf5]/60 font-['DM_Sans']">© 2024 CodeForge. All rights reserved.</div>
+</div>
+<div class="flex flex-wrap justify-center gap-12">
+<div class="flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Product</span>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Features</a>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Security</a>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Enterprise</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Resources</span>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Documentation</a>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">API Reference</a>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Status</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Legal</span>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Privacy</a>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Terms</a>
+<a class="text-[#eaeaf5]/60 hover:text-[#00e5ff] transition-colors text-sm font-['DM_Sans']" href="#">Cookie Policy</a>
+</div>
+</div>
+<div class="mt-8 md:mt-0 flex gap-6">
+<a class="text-[#eaeaf5]/60 hover:text-primary transition-colors" href="#">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"></path></svg>
+</a>
+<a class="text-[#eaeaf5]/60 hover:text-primary transition-colors" href="#">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M23.953 4.57a10 10 0 0 1-2.825.775 4.958 4.958 0 0 0 2.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 0 0-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 0 1-2.228-.616v.06a4.923 4.923 0 0 0 3.946 4.84 4.996 4.996 0 0 1-2.212.085 4.936 4.936 0 0 0 4.604 3.417 9.867 9.867 0 0 1-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 0 0 7.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0 0 24 4.59z"></path></svg>
+</a>
+</div>
+</div>
+</footer>
+<!-- Scroll Progress Bar -->
+<div class="fixed top-0 left-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary z-[60] transition-all" id="progress-bar" style="width: 0%;"></div>
+<script>
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+    });
+  </script>
+</body></html>
