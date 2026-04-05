@@ -23,10 +23,18 @@ export const executeCode = async (language: string, code: string, input?: string
             executionTime: response.data.executionTime,
             isError: !!response.data.error
         };
-    } catch (error: any) {
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                output: '',
+                error: error.response?.data?.message || error.message || 'Execution failed',
+                executionTime: '0.00',
+                isError: true
+            };
+        }
         return {
             output: '',
-            error: error.response?.data?.message || error.message || 'Execution failed',
+            error: error instanceof Error ? error.message : 'Execution failed',
             executionTime: '0.00',
             isError: true
         };

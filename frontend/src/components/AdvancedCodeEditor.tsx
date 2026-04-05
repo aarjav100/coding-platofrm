@@ -322,6 +322,7 @@ const AdvancedCodeEditor = ({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, language]);
 
   // Code stats
@@ -447,7 +448,7 @@ const AdvancedCodeEditor = ({
         failed: mockResults.filter(r => !r.passed).length
       });
 
-      let resultMessage = allPassed
+      const resultMessage = allPassed
         ? "✅ All test cases passed!"
         : "❌ Some test cases failed.";
 

@@ -17,7 +17,7 @@ export const executeCode = async (
             try {
                 if (language === 'javascript' || language === 'typescript') {
                     // capture console.log
-                    let logs: string[] = [];
+                    const logs: string[] = [];
                     const originalLog = console.log;
                     console.log = (...args) => {
                         logs.push(args.map(a =>

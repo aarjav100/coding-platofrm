@@ -1,0 +1,46 @@
+
+> vite_react_shadcn_ts@0.0.0 lint
+> eslint .
+
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\AdvancedCodeEditor.tsx
+  325:6   warning  React Hook useEffect has missing dependencies: 'handleRun' and 'handleSubmit'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  450:11  error    'resultMessage' is never reassigned. Use 'const' instead                                                                           prefer-const
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\carousels\VideoCarousel.tsx
+  56:54   error  Unnecessary escape character: \/  no-useless-escape
+  56:112  error  Unnecessary escape character: \/  no-useless-escape
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\theme-provider.tsx
+  75:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\ui\badge.tsx
+  29:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\ui\button.tsx
+  47:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\ui\form.tsx
+  129:10  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\ui\navigation-menu.tsx
+  111:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\ui\sidebar.tsx
+  636:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\ui\sonner.tsx
+  27:19  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\components\ui\toggle.tsx
+  37:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\pages\Store.tsx
+  35:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+F:\projects\coding platform\remix-of-mern-mastery-hub-main\frontend\src\utils\mockExecutor.ts
+  20:25  error  'logs' is never reassigned. Use 'const' instead  prefer-const
+
+✖ 14 problems (4 errors, 10 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
