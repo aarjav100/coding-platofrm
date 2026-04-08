@@ -15,15 +15,7 @@ import {
   InfiniteLoopCarousel,
 } from "@/components/carousels";
 import { Footer } from "@/components/Footer";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dashboard-dropdown";
+
 import {
   Sheet,
   SheetContent,
