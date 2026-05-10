@@ -9,8 +9,8 @@ import {
   CheckCircle2, Zap, Clock, HardDrive, TrendingUp,
   Code2, AlertCircle
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
+import api from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 interface CodeReviewFeedback {
@@ -62,18 +62,14 @@ export default function AICodeReviewer({
     setFeedback(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('ai-code-review', {
-        body: { 
-          code, 
-          language, 
-          problemId,
-          problemTitle,
-          problemDescription,
-          reviewType 
-        }
+      const { data } = await api.post('/ai/code-review', { 
+        code, 
+        language, 
+        problemId,
+        problemTitle,
+        problemDescription,
+        reviewType 
       });
-
-      if (error) throw error;
 
       if (data.success) {
         setFeedback(data.feedback);

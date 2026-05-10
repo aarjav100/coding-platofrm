@@ -1,215 +1,153 @@
-import React, { useState } from 'react';
-import { BackgroundEffects } from '@/components/BackgroundEffects';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TopNav } from '@/components/TopNav';
-import { SidebarHUD } from '@/components/SidebarHUD';
+import { BackgroundEffects } from '@/components/BackgroundEffects';
+import { GlobalFooter } from '@/components/GlobalFooter';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Trophy, Clock, Users, ChevronRight, Terminal, Zap, Shield, Target } from 'lucide-react';
 
 const Contests = () => {
-  const [activeTab, setActiveTab] = useState('ACTIVE CONTESTS');
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const featuredContests = [
+    {
+      id: 'c1',
+      title: "Obsidian Core Challenge",
+      description: "Optimize the core kernel of the Obsidian architecture for maximum throughput.",
+      startTime: "Starts in 2h 15m",
+      participants: 1240,
+      difficulty: "Elite",
+      prize: "5,000 Pts",
+      status: "upcoming"
+    },
+    {
+      id: 'c2',
+      title: "Reactive Ascension",
+      description: "Build a real-time reactive dashboard using advanced state management patterns.",
+      startTime: "Active Now",
+      participants: 856,
+      difficulty: "Advanced",
+      prize: "2,500 Pts",
+      status: "active"
+    }
+  ];
 
   return (
-    <div className="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary min-h-screen">
+    <div className="min-h-screen bg-background text-on-surface font-body antialiased selection:bg-primary selection:text-primary-foreground">
       <BackgroundEffects />
-      
-      <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-        <div className="layout-container flex h-full grow flex-col">
-          <TopNav />
-          
-          <main className="flex flex-col md:flex-row flex-1 md:pr-10 lg:pr-20">
-            <div className="hidden md:block h-full">
-              <SidebarHUD />
-            </div>
+      <TopNav />
+
+      <main className="relative z-10 pt-20 pb-32 px-4 md:px-12 max-w-screen-xl mx-auto">
+        <section className="mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-primary/10 border border-primary/20 text-primary text-[10px] font-mono uppercase tracking-[0.2em] mb-6">
+            <Trophy className="w-3 h-3" />
+            Active Arena
+          </div>
+          <h1 className="font-headline text-5xl md:text-6xl font-black tracking-tighter mb-4 uppercase">
+            THE <span className="text-primary">ARENA.</span>
+          </h1>
+          <p className="text-on-surface-variant max-w-2xl font-light text-lg">
+            Compete against the world's most capable architects. Prove your technical superiority and ascend the elite roster.
+          </p>
+        </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Main Contest Feed */}
+          <div className="lg:col-span-2 space-y-8">
+            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-primary/60 mb-6 flex items-center gap-2">
+              <Zap className="w-3 h-3" />
+              Priority Engagements
+            </h2>
             
-            {/* Content Area */}
-            <div className="flex-1 flex flex-col p-6 md:p-10 gap-10">
-              {/* Featured Banner */}
-              <section className="relative group rounded-lg overflow-hidden min-h-[300px] md:min-h-[400px] flex flex-col justify-end p-8 md:p-12 border border-outline-variant/20">
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
-                  style={{
-                    backgroundImage: `linear-gradient(to top, #111318 0%, rgba(17, 19, 24, 0.4) 50%, rgba(17, 19, 24, 0) 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFKbf9yKyf8gXIjYz6QUvrKpMFR4f8wa9MCLtlQXAbw5-MKAtbA4D0-L0LX2-AH3CzRIoD4ER0FxyZXaLGYQN1UMWJZnvGKut3-pqZVr_hDyNqy7COMeuE_kG3QuUfiJoR6B5rAQs6BPKiRcUKHECsXxIMhi2o94rf8toBO0f-NNuWA34REyd2fJlNyMx06Xjpjz4Zyo1IZvrvOFJnbKDP_R7C0Rw5q4IgtT9KHZKMzOUeW5XjVNSxF9E3cZXMbGO2bRSxajO1xU4')`
-                  }}
-                ></div>
-                <div className="absolute top-6 right-6 md:top-10 md:right-10 flex gap-2">
-                  <span className="bg-primary-container text-on-primary-container px-3 py-1 text-[10px] md:text-xs font-bold tracking-widest uppercase rounded">Featured</span>
-                  <span className="bg-surface-container-highest/80 backdrop-blur text-white px-3 py-1 text-[10px] md:text-xs font-bold tracking-widest uppercase rounded">March 24</span>
+            {featuredContests.map((contest) => (
+              <div key={contest.id} className="bg-surface-container-low border border-outline-variant/10 p-8 rounded-sm group hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                   <Target className="w-24 h-24" />
                 </div>
-                <div className="relative z-10 max-w-2xl">
-                  <h1 className="font-headline text-3xl md:text-5xl font-bold leading-tight mb-4 tracking-tighter">
-                    CODE THE FUTURE: <span className="text-primary">GENESIS HACK</span>
-                  </h1>
-                  <p className="text-on-surface-variant text-sm md:text-lg leading-relaxed mb-8 font-body">
-                    Build the next generation of decentralized infrastructure. $50,000 prize pool, world-class mentors, and exclusive NFT rewards for top contributors.
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-6">
+                    <Badge variant="outline" className={`rounded-sm font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 ${contest.status === 'active' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                      {contest.status}
+                    </Badge>
+                    <div className="flex items-center gap-2 text-on-surface-variant/60 font-mono text-[10px]">
+                       <Clock className="w-3 h-3" />
+                       {contest.startTime}
+                    </div>
+                  </div>
+                  <h3 className="font-headline text-2xl font-black mb-3 group-hover:text-primary transition-colors">{contest.title}</h3>
+                  <p className="text-on-surface-variant mb-8 font-light leading-relaxed">
+                    {contest.description}
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <button className="bg-primary-container text-on-primary-container font-bold px-8 py-3 rounded hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all">Register Now</button>
-                    <button className="bg-surface-container-highest text-on-surface font-bold px-8 py-3 rounded border border-outline-variant hover:bg-surface-bright transition-all">View Details</button>
+                  <div className="flex flex-wrap items-center gap-6 pt-6 border-t border-outline-variant/5">
+                    <div className="flex items-center gap-2">
+                       <Users className="w-4 h-4 text-on-surface-variant/40" />
+                       <span className="text-xs font-mono">{contest.participants} Architects</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                       <Shield className="w-4 h-4 text-on-surface-variant/40" />
+                       <span className="text-xs font-mono">{contest.difficulty}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                       <Zap className="w-4 h-4 text-primary/60" />
+                       <span className="text-xs font-mono text-primary">{contest.prize}</span>
+                    </div>
+                    <Button 
+                      className="ml-auto rounded-sm bg-surface-container-highest hover:bg-primary hover:text-primary-foreground transition-all px-6"
+                      onClick={() => navigate(`/contest/${contest.id}`)}
+                    >
+                      Deploy
+                    </Button>
                   </div>
                 </div>
-              </section>
+              </div>
+            ))}
+          </div>
 
-              {/* Contest Controls */}
-              <section className="flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row justify-between border-b border-outline-variant/30 pb-2 gap-4 md:items-end">
-                  <div className="flex gap-4 md:gap-8 overflow-x-auto w-full md:w-auto scrollbar-hide">
-                    {['ACTIVE CONTESTS', 'UPCOMING', 'PAST RESULTS'].map((tab) => (
-                      <button 
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`pb-4 border-b-2 font-bold text-xs md:text-sm tracking-wide whitespace-nowrap transition-colors ${
-                          activeTab === tab 
-                            ? 'border-primary text-primary' 
-                            : 'border-transparent text-outline hover:text-on-surface'
-                        }`}
-                      >
-                        {tab}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-2 pb-2 md:pb-4 whitespace-nowrap self-start md:self-auto">
-                    <span className="text-xs text-outline font-mono">SORT BY:</span>
-                    <button className="text-xs font-bold flex items-center gap-1">
-                      PRIZE POOL <span className="material-symbols-outlined text-[14px]">expand_more</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Grid of Contests */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {/* Contest Card 1 */}
-                  <div className="bg-surface-container-low border border-outline-variant/10 rounded-lg p-6 hover:bg-surface-container transition-all group flex flex-col justify-between h-full min-h-[320px]">
-                    <div>
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="bg-primary/10 text-primary px-2 py-1 rounded text-[10px] font-bold tracking-widest uppercase">Live Now</div>
-                        <div className="text-outline text-xs font-mono">ID: #C-1092</div>
-                      </div>
-                      <h3 className="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors">Neural Net Optimization</h3>
-                      <p className="text-on-surface-variant text-sm mb-6 line-clamp-2">Optimize latency for large-scale language models in constrained hardware environments.</p>
-                      
-                      <div className="space-y-3 mb-8">
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-outline text-lg">calendar_today</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Starts</span>
-                            <span className="text-sm font-medium">Started 2h ago</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-outline text-lg">schedule</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Duration</span>
-                            <span className="text-sm font-medium">48 Hours</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-primary text-lg">payments</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Prize Pool</span>
-                            <span className="text-sm font-bold text-primary">$12,000 USD</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <button className="w-full bg-surface-container-highest text-on-surface font-bold py-3 rounded hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 mt-auto">
-                      Join Contest <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </button>
-                  </div>
-
-                  {/* Contest Card 2 */}
-                  <div className="bg-surface-container-low border border-outline-variant/10 rounded-lg p-6 hover:bg-surface-container transition-all group flex flex-col justify-between h-full min-h-[320px]">
-                    <div>
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold tracking-widest uppercase">System Design</div>
-                        <div className="text-outline text-xs font-mono">ID: #C-1095</div>
-                      </div>
-                      <h3 className="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors">Distributed Cache Engine</h3>
-                      <p className="text-on-surface-variant text-sm mb-6 line-clamp-2">Design and implement a zero-copy distributed cache with high consistency guarantees.</p>
-                      
-                      <div className="space-y-3 mb-8">
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-outline text-lg">calendar_today</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Starts</span>
-                            <span className="text-sm font-medium">Tomorrow, 10:00 AM</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-outline text-lg">schedule</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Duration</span>
-                            <span className="text-sm font-medium">3 Hours</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-primary text-lg">payments</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Prize Pool</span>
-                            <span className="text-sm font-bold text-primary">$5,000 USD</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <button className="w-full bg-surface-container-highest text-on-surface font-bold py-3 rounded hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 mt-auto">
-                      Pre-Register <span className="material-symbols-outlined text-sm">notifications_active</span>
-                    </button>
-                  </div>
-
-                  {/* Contest Card 3 */}
-                  <div className="bg-surface-container-low border border-outline-variant/10 rounded-lg p-6 hover:bg-surface-container transition-all group flex flex-col justify-between h-full min-h-[320px]">
-                    <div>
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="bg-primary/10 text-primary px-2 py-1 rounded text-[10px] font-bold tracking-widest uppercase">Algorithms</div>
-                        <div className="text-outline text-xs font-mono">ID: #C-1102</div>
-                      </div>
-                      <h3 className="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors">Obsidian Sprint 08</h3>
-                      <p className="text-on-surface-variant text-sm mb-6 line-clamp-2">A weekly high-speed competitive programming round featuring 5 problems.</p>
-                      
-                      <div className="space-y-3 mb-8">
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-outline text-lg">calendar_today</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Starts</span>
-                            <span className="text-sm font-medium">March 15, 18:00</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-outline text-lg">schedule</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Duration</span>
-                            <span className="text-sm font-medium">90 Minutes</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-primary text-lg">payments</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Prize Pool</span>
-                            <span className="text-sm font-bold text-primary">Points + $1k</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <button className="w-full bg-surface-container-highest text-on-surface font-bold py-3 rounded hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 mt-auto">
-                      Join Sprint <span className="material-symbols-outlined text-sm">bolt</span>
-                    </button>
-                  </div>
-                </div>
-              </section>
+          {/* Sidebar Info */}
+          <div className="space-y-12">
+            <div>
+               <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-primary/60 mb-8 flex items-center gap-2">
+                <Terminal className="w-3 h-3" />
+                Arena Metrics
+              </h2>
+              <div className="bg-surface-container-lowest border border-outline-variant/10 p-6 rounded-sm space-y-6">
+                 <div className="flex justify-between items-center">
+                    <span className="text-xs text-on-surface-variant font-mono">Global Peak</span>
+                    <span className="text-sm font-bold">14,209 ops/s</span>
+                 </div>
+                 <div className="flex justify-between items-center">
+                    <span className="text-xs text-on-surface-variant font-mono">Uptime</span>
+                    <span className="text-sm font-bold text-green-500">99.99%</span>
+                 </div>
+                 <div className="flex justify-between items-center">
+                    <span className="text-xs text-on-surface-variant font-mono">Avg Latency</span>
+                    <span className="text-sm font-bold">12ms</span>
+                 </div>
+              </div>
             </div>
-          </main>
-          
-          {/* Sticky Footer CTA */}
-          <footer className="mt-auto border-t border-outline-variant/10 py-6 px-4 md:px-10 flex flex-col sm:flex-row items-center justify-between bg-surface-container-high/60 backdrop-blur-[20px] gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse w-shrink-0"></div>
-              <p className="text-[10px] md:text-xs font-mono text-outline">CURRENTLY 12,482 DEVELOPERS ONLINE</p>
+
+            <div className="bg-primary/5 border border-primary/10 p-8 rounded-sm">
+               <h3 className="font-headline font-black text-xl mb-4">WANT TO HOST?</h3>
+               <p className="text-sm text-on-surface-variant mb-6 leading-relaxed">
+                 Enterprise partners can host private challenges to recruit top-tier technical talent from our roster.
+               </p>
+               <Button variant="outline" className="w-full rounded-sm border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground">
+                 Contact Relations
+               </Button>
             </div>
-            <div className="flex flex-wrap justify-center gap-4 md:gap-10">
-              <a className="text-[10px] md:text-xs font-bold text-outline hover:text-on-surface transition-colors" href="#">API DOCS</a>
-              <a className="text-[10px] md:text-xs font-bold text-outline hover:text-on-surface transition-colors" href="#">GUIDELINES</a>
-              <a className="text-[10px] md:text-xs font-bold text-outline hover:text-on-surface transition-colors" href="#">SUPPORT</a>
-            </div>
-          </footer>
+          </div>
         </div>
-      </div>
+      </main>
+
+      <GlobalFooter />
     </div>
   );
 };

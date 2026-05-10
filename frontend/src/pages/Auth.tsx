@@ -5,6 +5,9 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import { GlobalFooter } from "@/components/GlobalFooter";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Terminal, Github, Mail, ShieldCheck, Zap, ArrowRight } from "lucide-react";
 
 // Validation schemas
 const emailSchema = z.string().email("Please enter a valid email address");
@@ -70,16 +73,14 @@ const Auth = () => {
 
       toast({
         title: isLogin ? "Welcome back!" : "Account Created!",
-        description: isLogin ? "You have successfully logged in." : "Welcome to NexCode! Start your coding journey.",
+        description: isLogin ? "You have successfully logged in." : "Welcome to the Obsidian Arena.",
       });
       
-      // Use setTimeout to allow browser extensions (like React DevTools) to finish their background port messaging
-      // before we navigate away and unmount the component, which causes the proxy.js error.
       setTimeout(() => {
         navigate("/");
       }, 100);
       
-      return; // Return early so we don't call setLoading(false) on an unmounted component
+      return;
     } catch (error: any) {
       toast({
         title: isLogin ? "Login Failed" : "Sign Up Failed",
@@ -91,253 +92,120 @@ const Auth = () => {
   };
 
   return (
-    <div className="bg-surface-container-lowest font-body text-on-surface selection:bg-primary/30 min-h-screen relative flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-background text-on-surface font-body antialiased selection:bg-primary selection:text-primary-foreground">
       <BackgroundEffects />
-
-      {/* Top Navigation Bar */}
-      <header className="bg-[#0c0e12]/80 backdrop-blur-md fixed top-0 z-50 w-full">
-        <div className="flex items-center justify-between px-8 py-4 w-full max-w-screen-2xl mx-auto">
-          <div className="text-2xl font-black tracking-tighter text-primary font-headline cursor-pointer" onClick={() => navigate('/')}>
-            NexCode
-          </div>
-          <div className="flex items-center gap-6">
-            <span className="text-slate-400 font-headline font-medium tracking-tight text-sm">
-              {isLogin ? "New to the terminal?" : "Already a member?"}
-            </span>
-            <button 
-              onClick={() => { setIsLogin(!isLogin); setErrors({}); }}
-              className="text-primary font-bold hover:text-primary-fixed-dim transition-colors duration-200"
-            >
-              {isLogin ? "Sign Up" : "Log In"}
-            </button>
-          </div>
+      
+      <header className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center">
+        <div 
+          className="text-2xl font-headline font-black tracking-tighter text-primary cursor-pointer uppercase"
+          onClick={() => navigate('/')}
+        >
+          Obsidian<span className="text-on-surface">.</span>
         </div>
+        <Button 
+          variant="ghost" 
+          className="font-mono text-xs uppercase tracking-widest text-primary hover:text-primary-foreground hover:bg-primary"
+          onClick={() => { setIsLogin(!isLogin); setErrors({}); }}
+        >
+          {isLogin ? "Sign Up" : "Log In"}
+        </Button>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center px-6 pt-32 pb-12 z-10 w-full">
-        
-        {/* Ambient glow specifically for Signup to match Stitch */}
-        {!isLogin && (
-          <>
-            <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
-            <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
-          </>
-        )}
+      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-24">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-primary/10 border border-primary/20 text-primary text-[10px] font-mono uppercase tracking-[0.2em] mb-6">
+              <ShieldCheck className="w-3 h-3" />
+              Security Protocol
+            </div>
+            <h1 className="font-headline text-5xl font-black tracking-tighter uppercase mb-2">
+              {isLogin ? "Welcome" : "Initialize"} <span className="text-primary">{isLogin ? "Back." : "Build."}</span>
+            </h1>
+            <p className="text-on-surface-variant font-light text-sm">
+              {isLogin ? "Enter your credentials to access the architecture." : "Create your architect profile to join the elite roster."}
+            </p>
+          </div>
 
-        <div className={`w-full ${isLogin ? 'max-w-[440px]' : 'max-w-md'} relative`}>
-          
-          {isLogin ? (
-            // LOGIN VIEW
-            <>
-              {/* Branding Anchor */}
-              <div className="mb-10 text-center">
-                <div className="inline-flex items-center justify-center p-3 mb-4 rounded-lg bg-surface-container border border-outline-variant/20 shadow-xl">
-                  <span className="material-symbols-outlined text-primary text-3xl">terminal</span>
+          <div className="bg-surface-container-low border border-outline-variant/10 p-8 md:p-10 rounded-sm relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1 h-full bg-primary/20"></div>
+            
+            <form onSubmit={handleAuth} className="space-y-6">
+              {!isLogin && (
+                <div className="space-y-2">
+                  <label className="text-xs font-mono uppercase tracking-widest text-primary/60">Architect Handle</label>
+                  <Input 
+                    placeholder="e.g. Neo" 
+                    className="bg-surface-container-lowest border-outline-variant/20 rounded-sm focus:border-primary transition-all"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    disabled={loading}
+                  />
+                  {errors.displayName && <p className="text-[10px] text-red-400 font-mono">{errors.displayName}</p>}
                 </div>
-                <h1 className="font-headline font-black tracking-tighter text-4xl text-on-surface uppercase">NexCode</h1>
-                <p className="font-label text-xs uppercase tracking-[0.2em] text-outline mt-2">The Obsidian Architect</p>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-xs font-mono uppercase tracking-widest text-primary/60">Identity Core (Email)</label>
+                <Input 
+                  placeholder="architect@obsidian.io" 
+                  className="bg-surface-container-lowest border-outline-variant/20 rounded-sm focus:border-primary transition-all"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                />
+                {errors.email && <p className="text-[10px] text-red-400 font-mono">{errors.email}</p>}
               </div>
 
-              {/* Login Card */}
-              <div className="bg-surface-container border border-outline-variant/10 shadow-2xl relative overflow-hidden group">
-                {/* Subtle Top Accent */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
-                
-                <div className="p-8 md:p-10">
-                  <form className="space-y-6" onSubmit={handleAuth}>
-                    {/* Email Field */}
-                    <div className="space-y-2">
-                      <label className="block font-headline text-sm font-semibold tracking-wide text-on-surface-variant" htmlFor="email">Email</label>
-                      <div className="relative group/field">
-                        <input 
-                          className="w-full bg-surface-container-low border-none border-b-2 border-outline-variant/30 text-on-surface px-0 py-3 focus:ring-0 focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-outline/40" 
-                          id="email" 
-                          placeholder="architect@nexcode.io" 
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          disabled={loading}
-                        />
-                        <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary group-focus-within/field:w-full transition-all duration-500 shadow-[0_0_15px_rgba(78,222,163,0.5)]"></div>
-                      </div>
-                      {errors.email && <p className="text-xs text-error mt-1">{errors.email}</p>}
-                    </div>
-                    
-                    {/* Password Field */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <label className="block font-headline text-sm font-semibold tracking-wide text-on-surface-variant" htmlFor="password">Password</label>
-                        <a className="text-xs font-medium text-primary hover:text-primary-fixed-dim transition-colors" href="#">Forgot Password?</a>
-                      </div>
-                      <div className="relative group/field">
-                        <input 
-                          className="w-full bg-surface-container-low border-none border-b-2 border-outline-variant/30 text-on-surface px-0 py-3 focus:ring-0 focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-outline/40" 
-                          id="password" 
-                          placeholder="••••••••" 
-                          type="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          disabled={loading}
-                        />
-                        <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary group-focus-within/field:w-full transition-all duration-500 shadow-[0_0_15px_rgba(78,222,163,0.5)]"></div>
-                      </div>
-                      {errors.password && <p className="text-xs text-error mt-1">{errors.password}</p>}
-                    </div>
-
-                    {/* Primary Action */}
-                    <button 
-                      className="w-full bg-primary text-on-primary font-headline font-bold py-4 mt-4 hover:shadow-[0_0_30px_rgba(78,222,163,0.3)] active:scale-[0.98] transition-all duration-200 uppercase tracking-widest text-sm disabled:opacity-50" 
-                      type="submit"
-                      disabled={loading}
-                    >
-                      {loading ? "Authenticating..." : "Sign In"}
-                    </button>
-                  </form>
-
-                  {/* Divider */}
-                  <div className="relative my-10 flex items-center">
-                    <div className="flex-grow border-t border-outline-variant/15"></div>
-                    <span className="flex-shrink mx-4 text-[10px] font-bold text-outline uppercase tracking-widest">Or Continue With</span>
-                    <div className="flex-grow border-t border-outline-variant/15"></div>
-                  </div>
-
-                  {/* Social Logins */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <button className="flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-highest border border-outline-variant/10 hover:bg-surface-bright transition-colors duration-200">
-                      <img alt="" className="w-5 h-5 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKNH9aIBBHOxU0mrHEi3Eh5ChUt_WeypRT2lxbxzsl01AoS6vxgf5b3MO-ud9i51cKjQi-W0-ObkOOt7sTN31YTkHdYyxJLg057mHqPKyAm23NWDjGJzSNikHjlwtKrClXIUK4EAQX9DXicsewP1Tm6webKRE08Cs9zndn2bdWt4QnG5gyxxDs17RiI5Eg8uAfRRuygJ14GM3XDJUH8KfiK1URupaa9sfvX8u_rtXu2KtVcZS_UCn3GP7Y80yicuTBjVI0zRUH_NE"/>
-                      <span className="text-xs font-headline font-semibold uppercase tracking-tight">GitHub</span>
-                    </button>
-                    <button className="flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-highest border border-outline-variant/10 hover:bg-surface-bright transition-colors duration-200">
-                      <img alt="" className="w-4 h-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-Y1yq3F9QHKrbeorhDWSWOu9CWkbNSAiynMTIU_89cHZ47gdK0XnFdwM3FE-EVSJv-BtIFkiK938yqYsrYMG1Nd1oZc7pWvwQJNQ3qHzHe8vveXysHgOJHNvhoqQ3vX892QqYBjUj482xISxlwTjhT8k8usZaC1KiKUAJCaxtNXN7LS3a5FGD28iM5Hr0gpFgFDZFcndRdZ3W6E_kbJNdwUnmFzxPBvF33gJKQUqsLu4OeyqtqvtNQ-uiG3G9Eal9NmUkf5fzihU"/>
-                      <span className="text-xs font-headline font-semibold uppercase tracking-tight">Google</span>
-                    </button>
-                  </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-mono uppercase tracking-widest text-primary/60">Access Key</label>
+                  {isLogin && <a href="#" className="text-[10px] font-mono text-primary/40 hover:text-primary">RECOVER?</a>}
                 </div>
-
-                {/* Footer Link inside Card */}
-                <div className="bg-surface-container-high/30 py-6 px-10 text-center border-t border-outline-variant/10">
-                  <p className="text-sm text-on-surface-variant font-medium">
-                    New to the terminal? <button onClick={() => {setIsLogin(false); setErrors({});}} className="text-primary hover:underline font-bold transition-all ml-1">Sign Up</button>
-                  </p>
-                </div>
+                <Input 
+                  type="password" 
+                  placeholder="••••••••" 
+                  className="bg-surface-container-lowest border-outline-variant/20 rounded-sm focus:border-primary transition-all"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                />
+                {errors.password && <p className="text-[10px] text-red-400 font-mono">{errors.password}</p>}
               </div>
 
-              {/* Technical Metadata Footer */}
-              <div className="mt-12 flex justify-between items-center opacity-40">
-                <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
-                  <span className="font-mono text-[10px] uppercase tracking-tighter">System: Stable</span>
-                </div>
-                <span className="font-mono text-[10px] uppercase tracking-tighter">v4.2.0-LTS</span>
-              </div>
-            </>
-          ) : (
-            // SIGNUP VIEW
-            <>
-              {/* Asymmetric Editorial Header */}
-              <div className="mb-10 text-left">
-                <h1 className="font-headline text-5xl font-black text-on-surface tracking-tighter leading-none mb-2">
-                  INITIATE <span className="text-primary italic">BUILD</span>
-                </h1>
-                <p className="text-on-surface-variant font-mono text-sm tracking-wide opacity-80 uppercase">
-                  Step into the obsidian architecture.
-                </p>
-              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest py-6 rounded-sm flex items-center justify-center gap-2"
+                disabled={loading}
+              >
+                {loading ? "Authenticating..." : (isLogin ? "Engage" : "Initiate")}
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </form>
 
-              {/* Registration Card (Glassmorphism) */}
-              <div className="bg-surface-container/60 backdrop-blur-xl p-8 shadow-2xl relative overflow-hidden group">
-                {/* Intentional Asymmetry: Accent line */}
-                <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-colors duration-500"></div>
-                
-                <form className="space-y-6" onSubmit={handleAuth}>
-                  {/* Full Name */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-mono uppercase tracking-widest text-on-surface-variant opacity-60 ml-1">Handle / Full Name</label>
-                    <div className="relative group/field">
-                      <input 
-                        className="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body py-3 transition-all duration-300 placeholder:text-on-surface/20" 
-                        placeholder="ARCHITECT NAME" 
-                        type="text"
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        disabled={loading}
-                      />
-                      <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-500 group-focus-within/field:w-full"></div>
-                    </div>
-                    {errors.displayName && <p className="text-xs text-error mt-1">{errors.displayName}</p>}
-                  </div>
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-outline-variant/10"></div></div>
+              <div className="relative flex justify-center text-[10px] uppercase font-mono"><span className="bg-surface-container-low px-2 text-on-surface-variant/40">Alternative Nodes</span></div>
+            </div>
 
-                  {/* Email */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-mono uppercase tracking-widest text-on-surface-variant opacity-60 ml-1">Email Address</label>
-                    <div className="relative group/field">
-                      <input 
-                        className="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body py-3 transition-all duration-300 placeholder:text-on-surface/20" 
-                        placeholder="NODE@NEXCODE.IO" 
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={loading}
-                      />
-                      <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-500 group-focus-within/field:w-full"></div>
-                    </div>
-                    {errors.email && <p className="text-xs text-error mt-1">{errors.email}</p>}
-                  </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Button variant="outline" className="border-outline-variant/20 rounded-sm hover:bg-surface-container-highest transition-all flex items-center gap-2">
+                <Github className="w-4 h-4" />
+                <span className="text-[10px] font-mono">GITHUB</span>
+              </Button>
+              <Button variant="outline" className="border-outline-variant/20 rounded-sm hover:bg-surface-container-highest transition-all flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                <span className="text-[10px] font-mono">GOOGLE</span>
+              </Button>
+            </div>
+          </div>
 
-                  {/* Password */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-mono uppercase tracking-widest text-on-surface-variant opacity-60 ml-1">Security Key</label>
-                    <div className="relative group/field">
-                      <input 
-                        className="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body py-3 transition-all duration-300 placeholder:text-on-surface/20" 
-                        placeholder="••••••••••••" 
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        disabled={loading}
-                      />
-                      <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-500 group-focus-within/field:w-full"></div>
-                    </div>
-                    {errors.password && <p className="text-xs text-error mt-1">{errors.password}</p>}
-                  </div>
-
-                  {/* Terms Checkbox */}
-                  <div className="flex items-center space-x-3 py-2">
-                    <div className="relative flex items-center">
-                      <input 
-                        className="h-4 w-4 rounded-none bg-surface-container-highest border-outline-variant text-primary focus:ring-offset-background focus:ring-primary" 
-                        id="terms" 
-                        type="checkbox"
-                        required
-                      />
-                    </div>
-                    <label className="text-xs font-body text-on-surface-variant leading-tight" htmlFor="terms">
-                      I agree to the <a className="text-primary hover:underline transition-all" href="#">Terms & Conditions</a> and data protocol.
-                    </label>
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="pt-4">
-                    <button 
-                      className="glow-button w-full bg-primary-container text-on-primary-container font-headline font-bold py-4 tracking-tighter uppercase text-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all hover:shadow-[0_0_15px_rgba(78,222,163,0.4)] disabled:opacity-50" 
-                      type="submit"
-                      disabled={loading}
-                    >
-                      {loading ? "Creating..." : "Create Account"}
-                      <span className="material-symbols-outlined text-xl">arrow_forward</span>
-                    </button>
-                  </div>
-                </form>
-
-                <div className="mt-8 flex items-center justify-between text-[10px] font-mono tracking-widest opacity-40 uppercase">
-                  <span>Precision Secured</span>
-                  <span>V 2.0.4-BETA</span>
-                </div>
-              </div>
-            </>
-          )}
-
+          <div className="mt-8 flex justify-center gap-6 opacity-30">
+             <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+                <span className="font-mono text-[10px] uppercase tracking-tighter">Encrypted</span>
+             </div>
+             <span className="font-mono text-[10px] uppercase tracking-tighter">System: Stable</span>
+          </div>
         </div>
       </main>
 

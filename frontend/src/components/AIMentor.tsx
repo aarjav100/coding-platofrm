@@ -84,13 +84,18 @@ export const AIMentor = () => {
         body.code = codeInput;
       }
 
+      const userInfo = localStorage.getItem('userInfo');
+      const token = userInfo ? JSON.parse(userInfo).token : null;
+      
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-mentor`,
+        `${API_URL}/ai/mentor`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(body),
         }

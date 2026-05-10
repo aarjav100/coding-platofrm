@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { TopNav } from '@/components/TopNav';
+import { GlobalFooter } from '@/components/GlobalFooter';
 import api from '@/lib/api';
 import { Loader2 } from "lucide-react";
 
@@ -217,18 +218,7 @@ const Leaderboard = () => {
                 )}
             </main>
 
-            {/* Footer Shell */}
-            <footer className="bg-[#0c0e12] w-full border-t border-[#333539] flex flex-col md:flex-row justify-between items-center px-12 py-8 mt-auto relative z-10">
-                <div className="flex flex-col items-center md:items-start gap-4">
-                    <span className="text-lg font-bold text-primary font-headline tracking-tighter">NexCode</span>
-                    <p className="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest text-slate-500">© 2024 NexCode. Precision engineered for the Obsidian Architect.</p>
-                </div>
-                <div className="flex gap-8 mt-6 md:mt-0">
-                    <a className="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-primary transition-colors" href="#">Documentation</a>
-                    <a className="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
-                    <a className="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-primary transition-colors" href="#">Contact Support</a>
-                </div>
-            </footer>
+            <GlobalFooter />
 
             {/* Decorative Elements */}
             <div className="fixed top-0 right-0 w-1/3 h-screen pointer-events-none z-0 overflow-hidden">

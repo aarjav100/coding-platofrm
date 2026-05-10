@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ModeToggle } from "@/components/mode-toggle";
-import { FadeIn } from "@/components/animations/FadeIn";
+import { TopNav } from "@/components/TopNav";
+import { BackgroundEffects } from "@/components/BackgroundEffects";
+import { GlobalFooter } from "@/components/GlobalFooter";
 import { ModuleCard } from "@/components/ModuleCard";
 import { modules } from "@/data/modules";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Code2, Search, Sparkles, BookOpen, Play, LogIn, LogOut, User, Trophy, Layers, ShoppingBag, Crown, ArrowRight } from "lucide-react";
+import { Code2, Search, Sparkles, BookOpen, Play, LogIn, LogOut, User, Trophy, Layers, ShoppingBag, Crown, ArrowRight, Terminal, Zap, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   MixedContentCarousel,
@@ -14,143 +15,53 @@ import {
   TestimonialCarousel,
   InfiniteLoopCarousel,
 } from "@/components/carousels";
-import { Footer } from "@/components/Footer";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-
-// Hero slides data
+// Hero slides data updated for Obsidian style
 const heroSlides = [
   {
+    type: 'content' as const,
+    title: "THE ELITE ROSTER.",
+    description: "Master the technical arts with precision, speed, and architectural integrity. Join the top 0.1% of global minds.",
+    badge: "NexCode Elite",
+    ctaText: "Start Deployment",
+    ctaLink: "/auth",
+    gradient: "bg-gradient-to-br from-background via-surface-container-low to-primary/10",
+  },
+  {
     type: 'image' as const,
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200",
-    title: "Master Programming",
-    description: "Learn to code with interactive tutorials, real projects, and expert guidance",
-    badge: "Start Learning",
-    ctaText: "Browse Modules",
+    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80",
+    title: "ARCHITECT YOUR FUTURE.",
+    description: "Learn to build scalable systems with deep-dive modules in React, Node, and System Design.",
+    badge: "New Modules",
+    ctaText: "Browse Curriculum",
     ctaLink: "#modules",
   },
-  {
-    type: 'content' as const,
-    title: "Weekly Coding Contests",
-    description: "Challenge yourself with algorithmic problems and compete with developers worldwide",
-    badge: "New Contest",
-    ctaText: "Join Contest",
-    ctaLink: "/contests",
-    gradient: "bg-gradient-to-br from-green-600 to-emerald-700",
-  },
-  {
-    type: 'image' as const,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200",
-    title: "Learn Together",
-    description: "Join our community of 50,000+ developers learning and growing together",
-    badge: "Community",
-    ctaText: "Get Started Free",
-    ctaLink: "/auth",
-  },
 ];
 
-// Code examples for carousel
 const codeExamples = [
   {
-    title: "React useState Hook",
-    language: "javascript",
-    code: `import { useState } from 'react';
-
-function Counter() {
-  const [count, setCount] = useState(0);
-  
-  return (
-    <button onClick={() => setCount(c => c + 1)}>
-      Clicked {count} times
-    </button>
-  );
-}`,
-    description: "State management made simple with React Hooks",
-  },
-  {
-    title: "TypeScript Interface",
+    title: "Obsidian Component Structure",
     language: "typescript",
-    code: `interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: 'admin' | 'user';
+    code: `interface SystemConfig {
+  architecture: 'monolithic' | 'microservices';
+  integrity: number; // 0.0 to 1.0
 }
 
-const user: User = {
-  id: 1,
-  name: "CodeMaster",
-  email: "learn@code.com",
-  role: "admin"
+const initializeDeployment = (config: SystemConfig) => {
+  console.log(\`Initializing \${config.architecture} system...\`);
+  return config.integrity > 0.99 ? "ELITE" : "STANDARD";
 };`,
-    description: "Type-safe code with TypeScript interfaces",
+    description: "Type-safe architectural configuration",
   },
-  {
-    title: "Python List Comprehension",
-    language: "python",
-    code: `# Filter and transform in one line
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-# Get squares of even numbers
-even_squares = [n**2 for n in numbers if n % 2 == 0]
-print(even_squares)  # [4, 16, 36, 64, 100]`,
-    description: "Elegant Python one-liners for data transformation",
-  },
-];
-
-// Testimonials data
-const testimonials = [
-  {
-    quote: "This platform helped me transition from a complete beginner to landing my first developer job in just 6 months!",
-    author: "Aarjav Jain",
-    role: "Frontend Developer",
-    company: "TechCorp",
-    rating: 5,
-  },
-  {
-    quote: "The interactive coding challenges and real-time feedback made learning algorithms so much easier and fun.",
-    author: "Priya Sharma",
-    role: "Software Engineer",
-    company: "StartupXYZ",
-    rating: 5,
-  },
-  {
-    quote: "Best investment I made in my career. The content quality and teaching methodology is top-notch.",
-    author: "Rahul Kumar",
-    role: "Full Stack Developer",
-    company: "Digital Agency",
-    rating: 5,
-  },
-];
-
-// Tech logos for infinite carousel
-const techLogos = [
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", alt: "JavaScript" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", alt: "TypeScript" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", alt: "React" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", alt: "Node.js" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", alt: "Python" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", alt: "Java" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg", alt: "C++" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg", alt: "MongoDB" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg", alt: "PostgreSQL" },
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg", alt: "Docker" },
 ];
 
 const Index = () => {
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Check auth state - User ka auth state check karo
   useEffect(() => {
     const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
@@ -159,338 +70,197 @@ const Index = () => {
     setLoading(false);
   }, []);
 
-  // Handle logout - Logout karne ka function
   const handleLogout = async () => {
     localStorage.removeItem('userInfo');
     setUser(null);
     toast({
-      title: "Logged out",
-      description: "See you next time!",
+      title: "Connection Terminated",
+      description: "See you in the next cycle, Architect.",
     });
   };
 
+  const filteredModules = modules.filter(m => 
+    m.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header with auth buttons - Navigation header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden mr-2">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[80vw] sm:w-[350px]">
-                <SheetHeader>
-                  <SheetTitle className="text-left flex items-center gap-2">
-                    <div className="bg-primary p-1.5 rounded-lg">
-                      <Code2 className="h-4 w-4 text-primary-foreground" />
+    <div className="min-h-screen bg-background text-on-surface font-body antialiased overflow-x-hidden selection:bg-primary selection:text-primary-foreground">
+      <BackgroundEffects />
+      <TopNav />
+
+      <main className="relative z-10">
+        {/* Hero Section */}
+        <section className="pt-20 pb-32 px-4 md:px-12 max-w-screen-2xl mx-auto">
+           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-7">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-primary/10 border border-primary/20 text-primary text-[10px] font-mono uppercase tracking-[0.2em] mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  <Terminal className="w-3 h-3" />
+                  System Status: Online
+                </div>
+                <h1 className="font-headline text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-[0.9]">
+                  THE <span className="text-primary">ELITE</span> <br /> ARCHITECT.
+                </h1>
+                <p className="text-on-surface-variant text-lg md:text-xl max-w-xl mb-10 leading-relaxed font-light">
+                  NexCode is the high-performance training ground for the next generation of technical leads. Precision, speed, and integrity are our only metrics.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button 
+                    size="lg" 
+                    className="h-14 px-8 rounded-sm bg-primary text-primary-foreground font-headline font-black uppercase tracking-tighter hover:brightness-110 active:scale-95 transition-all"
+                    onClick={() => navigate(user ? "/leaderboard" : "/auth")}
+                  >
+                    Initialize Session
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="h-14 px-8 rounded-sm border-outline-variant/30 text-on-surface hover:bg-surface-container-high transition-all"
+                    onClick={() => document.getElementById('modules')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    View Curriculum
+                  </Button>
+                </div>
+              </div>
+              <div className="lg:col-span-5 relative hidden lg:block">
+                 <div className="bg-surface-container-low border border-outline-variant/10 p-8 rounded-sm shadow-2xl relative overflow-hidden group">
+                    <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px] group-hover:bg-primary/20 transition-all duration-700"></div>
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-center mb-8">
+                        <div className="flex gap-1.5">
+                          <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/40"></div>
+                          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/40"></div>
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/40"></div>
+                        </div>
+                        <span className="font-mono text-[10px] text-on-surface-variant/40">deployment.v2.4.0</span>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="h-4 w-3/4 bg-on-surface/5 rounded-sm animate-pulse"></div>
+                        <div className="h-4 w-full bg-on-surface/5 rounded-sm animate-pulse delay-75"></div>
+                        <div className="h-4 w-1/2 bg-on-surface/5 rounded-sm animate-pulse delay-150"></div>
+                        <div className="pt-6">
+                           <div className="flex items-center gap-3 mb-2">
+                             <div className="size-2 rounded-full bg-primary animate-pulse"></div>
+                             <span className="font-mono text-[10px] text-primary">Establishing secure connection...</span>
+                           </div>
+                           <div className="h-1.5 w-full bg-on-surface/5 rounded-full overflow-hidden">
+                              <div className="h-full bg-primary w-2/3 animate-in slide-in-from-left duration-1000"></div>
+                           </div>
+                        </div>
+                      </div>
                     </div>
-                    CodeMaster
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col gap-4 mt-8">
-                  <Button variant="ghost" className="justify-start gap-2" onClick={() => navigate("/showcase")}>
-                    <Layers className="h-4 w-4" />
-                    Showcase
-                  </Button>
-                  <Button variant="ghost" className="justify-start gap-2" onClick={() => navigate("/contests")}>
-                    <Trophy className="h-4 w-4" />
-                    Contests
-                  </Button>
-                  <Button variant="ghost" className="justify-start gap-2" onClick={() => navigate("/premium")}>
-                    <Sparkles className="h-4 w-4 text-yellow-500" />
-                    Premium
-                  </Button>
-                  {user && (
-                    <>
-                      <div className="h-px bg-border my-2" />
-                      <Button variant="ghost" className="justify-start gap-2" onClick={() => navigate("/store")}>
-                        <ShoppingBag className="h-4 w-4" />
-                        Store
-                      </Button>
-                      <Button variant="ghost" className="justify-start gap-2" onClick={() => navigate("/leaderboard")}>
-                        <Crown className="h-4 w-4" />
-                        Leaderboard
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-
-            <Link to="/" className="flex items-center gap-2">
-              <div className="bg-primary p-2 rounded-lg hidden md:block">
-                <Code2 className="h-5 w-5 text-primary-foreground" />
+                 </div>
               </div>
-              <span className="text-xl font-bold text-foreground">CodeMaster</span>
-            </Link>
+           </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-24 border-y border-outline-variant/10 bg-surface-container-lowest/30">
+          <div className="container mx-auto px-4 md:px-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+               <div className="flex flex-col gap-2">
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/60">Success Rate</span>
+                  <h3 className="text-4xl font-headline font-black">98.4%</h3>
+                  <p className="text-sm text-on-surface-variant">Verified architect deployments.</p>
+               </div>
+               <div className="flex flex-col gap-2 border-l-0 md:border-l border-outline-variant/10 md:pl-12">
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/60">Platform Scale</span>
+                  <h3 className="text-4xl font-headline font-black">50K+</h3>
+                  <p className="text-sm text-on-surface-variant">Active nodes in the network.</p>
+               </div>
+               <div className="flex flex-col gap-2 border-l-0 md:border-l border-outline-variant/10 md:pl-12">
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/60">Avg Points</span>
+                  <h3 className="text-4xl font-headline font-black">12.4K</h3>
+                  <p className="text-sm text-on-surface-variant">Precision across all modules.</p>
+               </div>
+            </div>
           </div>
+        </section>
 
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={() => navigate("/showcase")} className="hidden md:flex">
-              <Layers className="h-4 w-4 mr-2" />
-              Showcase
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => navigate("/contests")} className="hidden md:flex">
-              <Trophy className="h-4 w-4 mr-2" />
-              Contests
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/premium")} className="hidden md:flex text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50">
-              <Sparkles className="h-4 w-4 mr-2 text-yellow-500" />
-              Premium
-            </Button>
-            {loading ? (
-              <div className="h-10 w-20 bg-muted animate-pulse rounded-md" />
-            ) : user ? (
-              <div className="flex items-center gap-2">
-                <ModeToggle />
-                <Button variant="ghost" size="sm" onClick={() => navigate("/store")} className="hidden md:flex">
-                  <ShoppingBag className="h-4 w-4 mr-2" />
-                  Store
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => navigate("/leaderboard")} className="hidden md:flex">
-                  <Crown className="h-4 w-4 mr-2" />
-                  Leaderboard
-                </Button>
-
-                <div className="h-6 w-px bg-border mx-1 hidden md:block" />
-
-                {/* Points Display */}
-                <div className="flex items-center gap-2 pl-1 pr-3 py-1.5 bg-accent/20 text-accent-foreground rounded-full border border-accent/20 transition-all hover:bg-accent/30 cursor-help" title="Your Learning Points">
-                  <div className="w-5 h-5 rounded-full bg-yellow-500 flex items-center justify-center text-[10px] text-white font-bold shadow-sm">
-                    P
-                  </div>
-                  <span className="text-sm font-bold">{user.points || 0}</span>
-                </div>
-
-                <div
-                  onClick={() => navigate("/profile")}
-                  className="flex items-center gap-2 pl-1 pr-2 py-1 bg-muted rounded-full border border-border cursor-pointer hover:bg-accent/10 hover:border-accent/50 transition-all select-none"
-                >
-                  <div className="w-7 h-7 rounded-full bg-background flex items-center justify-center border border-border shadow-sm">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <span className="text-xs font-medium text-foreground pr-2 hidden sm:inline-block max-w-[100px] truncate">
-                    {user.username || user.email?.split('@')[0]}
-                  </span>
-                </div>
-
-                <Button variant="ghost" size="icon" onClick={handleLogout} className="text-muted-foreground hover:text-destructive transition-colors rounded-full w-8 h-8">
-                  <LogOut className="h-4 w-4" />
-                  <span className="sr-only">Logout</span>
-                </Button>
+        {/* Modules Grid */}
+        <section id="modules" className="py-32 px-4 md:px-12 max-w-screen-2xl mx-auto">
+          <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="max-w-2xl">
+              <h2 className="font-headline text-4xl md:text-5xl font-black tracking-tighter mb-4">CURRICULUM DEPLOYMENT.</h2>
+              <p className="text-on-surface-variant text-lg font-light">Select a training module to begin your advancement cycle.</p>
+            </div>
+            <div className="relative w-full md:w-80">
+               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 w-4 h-4" />
+               <Input
+                 placeholder="Search modules..."
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
+                 className="pl-10 h-12 bg-surface-container-low border-outline-variant/20 focus:ring-1 focus:ring-primary rounded-sm text-sm font-mono"
+               />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredModules.map((module) => (
+              <div key={module.id} className="group cursor-pointer">
+                <ModuleCard
+                  id={module.id}
+                  title={module.title}
+                  description={module.description}
+                  category={module.category}
+                  topics={module.topics}
+                  difficulty={module.difficulty}
+                  price={module.price}
+                />
               </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <ModeToggle />
-                <Button onClick={() => navigate("/auth")} size="sm">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Login
-                </Button>
+            ))}
+            {filteredModules.length === 0 && (
+              <div className="col-span-full py-24 text-center border border-dashed border-outline-variant/30 rounded-sm">
+                 <p className="text-on-surface-variant font-mono">No matching modules found in the archive.</p>
               </div>
             )}
           </div>
-        </div>
-      </header>
+        </section>
 
-      {/* Hero Carousel Section */}
-      <section className="relative">
-        <FadeIn direction="up">
-          <MixedContentCarousel slides={heroSlides} autoplay autoplayInterval={6000} />
-        </FadeIn>
-      </section>
-
-      {/* Tech Stack Infinite Carousel */}
-      <section className="py-8 bg-muted/30 border-y border-border">
-        <div className="text-center mb-4">
-          <p className="text-sm text-muted-foreground uppercase tracking-wider">Technologies We Teach</p>
-        </div>
-        <InfiniteLoopCarousel items={techLogos} speed={30} />
-      </section>
-
-      {/* Features Section */}
-      <section className="py-16 bg-background">
-        <FadeIn delay={0.2}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4 text-foreground">Why Learn With Us?</h2>
-              <p className="text-muted-foreground">Everything you need to master coding</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              <div className="text-center p-6 rounded-lg bg-card border border-border shadow-soft hover:shadow-medium transition-all">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Code2 className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-semibold mb-2 text-foreground">Code Examples</h3>
-                <p className="text-sm text-muted-foreground">
-                  Real-world code snippets with syntax highlighting
-                </p>
+        {/* Code Showcase Section */}
+        <section className="py-32 bg-surface-container-low/50 relative overflow-hidden">
+           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+           <div className="container mx-auto px-4 md:px-12">
+              <div className="max-w-4xl mx-auto">
+                 <div className="text-center mb-16">
+                    <h2 className="font-headline text-3xl md:text-4xl font-black mb-4">TECHNICAL SPECIFICATIONS.</h2>
+                    <p className="text-on-surface-variant">Explore the core principles of the Obsidian architecture.</p>
+                 </div>
+                 <CodeSnippetCarousel slides={codeExamples} />
               </div>
-              <div className="text-center p-6 rounded-lg bg-card border border-border shadow-soft hover:shadow-medium transition-all">
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <BookOpen className="w-6 h-6 text-accent" />
-                </div>
-                <h3 className="font-semibold mb-2 text-foreground">Detailed Notes</h3>
-                <p className="text-sm text-muted-foreground">
-                  Comprehensive documentation and explanations
-                </p>
+           </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-40 relative">
+           <div className="container mx-auto px-4 text-center">
+              <h2 className="font-headline text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">
+                READY FOR <br /> <span className="text-primary">ASCENSION?</span>
+              </h2>
+              <div className="flex flex-col sm:flex-row justify-center gap-6">
+                 <Button 
+                    size="lg" 
+                    className="h-16 px-12 rounded-sm bg-primary text-primary-foreground font-headline font-black uppercase tracking-tighter hover:scale-105 transition-all shadow-[0_0_40px_rgba(199,100,50,0.3)]"
+                    onClick={() => navigate("/auth")}
+                 >
+                   Join the Roster
+                 </Button>
+                 <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="h-16 px-12 rounded-sm border-outline-variant/30 text-on-surface hover:bg-surface-container-high transition-all"
+                    onClick={() => navigate("/showcase")}
+                 >
+                   View Showcase
+                 </Button>
               </div>
-              <div className="text-center p-6 rounded-lg bg-card border border-border shadow-soft hover:shadow-medium transition-all">
-                <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-6 h-6 text-secondary" />
-                </div>
-                <h3 className="font-semibold mb-2 text-foreground">Animations</h3>
-                <p className="text-sm text-muted-foreground">
-                  Visual concepts brought to life
-                </p>
-              </div>
-              <div className="text-center p-6 rounded-lg bg-card border border-border shadow-soft hover:shadow-medium transition-all">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Play className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-semibold mb-2 text-foreground">Video Tutorials</h3>
-                <p className="text-sm text-muted-foreground">
-                  Step-by-step video guides
-                </p>
-              </div>
-            </div>
-          </div>
-        </FadeIn>
-      </section>
+           </div>
+        </section>
+      </main>
 
-      {/* Code Examples Carousel */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4 text-foreground">Learn by Example</h2>
-              <p className="text-muted-foreground">Explore code snippets from our courses</p>
-            </div>
-            <CodeSnippetCarousel slides={codeExamples} />
-          </div>
-        </div>
-      </section>
-
-      {/* Modules Grid */}
-      <section id="modules" className="py-16">
-        <div className="container mx-auto px-4">
-          <FadeIn delay={0.4}>
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-8">
-                <div className="relative flex-1 max-w-md mx-auto mb-8">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                  <Input
-                    placeholder="Search modules..."
-                    className="pl-10 h-12 bg-card border-border"
-                  />
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-                  Explore Learning Modules
-                </h2>
-                <p className="text-lg text-muted-foreground">
-                  Choose from our comprehensive collection of coding topics
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {modules.map((module) => (
-                  <ModuleCard
-                    key={module.id}
-                    id={module.id}
-                    title={module.title}
-                    description={module.description}
-                    category={module.category}
-                    topics={module.topics}
-                    difficulty={module.difficulty}
-                    price={module.price}
-                  />
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4 text-foreground">What Our Students Say</h2>
-              <p className="text-muted-foreground">Join thousands of successful developers</p>
-            </div>
-            <TestimonialCarousel testimonials={testimonials} autoplay />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-primary to-purple-900 animate-gradient-xy opacity-90" />
-        <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-10" />
-
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <FadeIn delay={0.6}>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white border border-white/20 mb-8 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <Sparkles className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm font-medium">Launch your career today</span>
-            </div>
-
-            <h2 className="text-4xl md:text-6xl font-black mb-6 text-white tracking-tight leading-tight drop-shadow-lg">
-              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-400">Master Code?</span>
-            </h2>
-
-            <p className="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-              Join a community of <span className="font-bold text-white">50,000+</span> developers building the future.
-              Start your journey with our interactive curriculum today.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button
-                size="lg"
-                variant="secondary"
-                className="h-14 px-8 text-lg font-bold bg-white text-primary hover:bg-indigo-50 hover:scale-105 transition-all shadow-xl hover:shadow-2xl hover:shadow-white/20"
-                onClick={() => navigate("/auth")}
-              >
-                Get Started for Free
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-14 px-8 text-lg font-medium border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
-                onClick={() => {
-                  const element = document.querySelector("#modules");
-                  element?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Explore Modules
-              </Button>
-            </div>
-
-            <div className="mt-12 flex items-center justify-center gap-8 text-white/40 grayscale hover:grayscale-0 transition-all duration-500">
-              {/* Trust badges or simple text acting as social proof */}
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-sm font-medium text-indigo-200">Live Mentorship</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse delay-75" />
-                <span className="text-sm font-medium text-indigo-200">Real Projects</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse delay-150" />
-                <span className="text-sm font-medium text-indigo-200">Global Community</span>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section >
-
-      <Footer />
-    </div >
+      <GlobalFooter />
+    </div>
   );
 };
 

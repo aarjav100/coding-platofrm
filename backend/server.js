@@ -7,17 +7,13 @@ const { seedItems } = require('./controllers/storeController'); // Import seed f
 
 // Load env vars
 dotenv.config();
-
-// Connect to database
 connectDB();
 
 const app = express();
 
-// Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json())
 
-// Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
@@ -28,6 +24,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/submissions', require('./routes/submissionRoutes'));
 app.use('/api/contests', require('./routes/contestRoutes'));
 app.use('/api/execute', require('./routes/executionRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 // Static folder for uploads
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
